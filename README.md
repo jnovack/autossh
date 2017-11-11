@@ -107,6 +107,12 @@ tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
 however, you can tunnel other services such as redis (port: 6379),
 elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
+#### KEY_FILE
+
+Specify where to look for SSH key file. By default it is in `/id_rsa` but if 
+you want to keep it in more secure environment e.g. Docker Secrets, you can
+override it.
+
 ### Docker Volumes
 
 #### /id_rsa
