@@ -1,7 +1,7 @@
 #!/bin/sh
 
-touch /id_rsa
-chmod 0400 /id_rsa
+touch ${SSH_KEY_FILE:=/id_rsa}
+chmod 0400 ${SSH_KEY_FILE:=/id_rsa}
 
 # Pick a random port above 32768
 DEFAULT_PORT=$RANDOM
@@ -14,8 +14,8 @@ echo autossh \
  -o ServerAliveInterval=5 \
  -o ServerAliveCountMax=1 \
  -t -t \
- -i ${KEY_FILE:=/id_rsa} \
- -R ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ -i ${SSH_KEY_FILE:=/id_rsa} \
+ ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
 
@@ -29,7 +29,7 @@ autossh \
  -o ServerAliveInterval=5 \
  -o ServerAliveCountMax=1 \
  -t -t \
- -i ${KEY_FILE:=/id_rsa} \
- -R ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ -i ${SSH_KEY_FILE:=/id_rsa} \
+ ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}

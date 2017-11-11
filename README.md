@@ -96,6 +96,9 @@ tunnel entrance. (Default: random > 32768)  If you do not want a new port
 every time you restart **jnovack/autossh** you may wish to explicitly set
 this.
 
+If you want to bind local forward tunnel to all interfaces, specify value
+like this: `*:2222`
+
 #### SSH_TUNNEL_HOST
 
 Specify the address (ip preferred) of the *target*.
@@ -107,11 +110,18 @@ tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
 however, you can tunnel other services such as redis (port: 6379),
 elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
-#### KEY_FILE
+#### SSH_KEY_FILE
 
 Specify where to look for SSH key file. By default it is in `/id_rsa` but if 
 you want to keep it in more secure environment e.g. Docker Secrets, you can
 override it.
+
+#### SSH_MODE
+
+Defines how the tunnel will be set up:
+
+* *-R* is default, remote forward mode
+* *-L* means local forward mode
 
 ### Docker Volumes
 
