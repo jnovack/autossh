@@ -1,7 +1,7 @@
 #!/bin/sh
 
-touch /id_rsa
-chmod 0400 /id_rsa
+touch ${SSH_KEY_FILE:=/id_rsa}
+chmod 0400 ${SSH_KEY_FILE:=/id_rsa}
 
 STRICT_HOSTS_KEY_CHECKING=no
 KNOWN_HOSTS=${KNOWN_HOSTS_FILE:=/known_hosts}
@@ -22,8 +22,8 @@ echo autossh \
  -o ServerAliveInterval=5 \
  -o ServerAliveCountMax=1 \
  -t -t \
- -i /id_rsa \
  -R ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ -i ${SSH_KEY_FILE:=/id_rsa} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
 
@@ -37,7 +37,7 @@ autossh \
  -o ServerAliveInterval=5 \
  -o ServerAliveCountMax=1 \
  -t -t \
- -i /id_rsa \
  -R ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ -i ${SSH_KEY_FILE:=/id_rsa} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}

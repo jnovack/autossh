@@ -78,6 +78,14 @@ event there is ever a need to revoke one or the other.
 What would a docker container be without customization? I have an extensive
 list of environment variables that can be set.
 
+### Mounts
+
+#### /id_rsa
+
+Mount the key you generated within the **Setup** step, or set
+`SSH_KEY_FILE`.
+
+    -v /path/to/id_rsa:/id_rsa
 ### Environment Variables
 
 #### SSH_HOSTUSER
@@ -107,13 +115,12 @@ tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
 however, you can tunnel other services such as redis (port: 6379),
 elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
-### Docker Volumes
+#### SSH_KEY_FILE
 
-#### /id_rsa
+In the event you wish to store the key in Docker Secrets, you may wish to
+set this to `/run/secrets/*secret-name*`
 
-Mount the key you generated within the **Setup** step.
 
-    -v /path/to/id_rsa:/id_rsa
 
 #### /known_hosts
 
