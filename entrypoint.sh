@@ -4,7 +4,7 @@ touch ${SSH_KEY_FILE:=/id_rsa}
 chmod 0400 ${SSH_KEY_FILE:=/id_rsa}
 
 STRICT_HOSTS_KEY_CHECKING=no
-KNOWN_HOSTS=${KNOWN_HOSTS_FILE:=/known_hosts}
+KNOWN_HOSTS=${SSH_KNOWN_HOSTS:=/known_hosts}
 if [ -f "${KNOWN_HOSTS}" ]; then
     chmod 0400 ${KNOWN_HOSTS}
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS}"

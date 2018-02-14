@@ -86,6 +86,14 @@ Mount the key you generated within the **Setup** step, or set
 `SSH_KEY_FILE`.
 
     -v /path/to/id_rsa:/id_rsa
+
+#### /known_hosts
+
+Mount the `known_hosts` file if you want to enable **STRICT_KEY_CHECKING**,
+or set `SSH_KNOWN_HOSTS`.
+
+    -v /path/to/known_hosts:/known_hosts
+
 ### Environment Variables
 
 #### SSH_HOSTUSER
@@ -120,11 +128,12 @@ elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 In the event you wish to store the key in Docker Secrets, you may wish to
 set this to `/run/secrets/*secret-name*`
 
+#### SSH_KNOWN_HOSTS
+
+In the event you wish to store the `known_hosts` in Docker Secrets, you may
+wish to set this to `/run/secrets/*secret-name*`
 
 
-#### /known_hosts
-
-Mount the `known_hosts` file if you want to enable **STRICT_KEY_CHECKING**
 
 ## Examples
 
