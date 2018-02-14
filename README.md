@@ -112,6 +112,10 @@ tunnel entrance. (Default: random > 32768)  If you do not want a new port
 every time you restart **jnovack/autossh** you may wish to explicitly set
 this.
 
+This option reverses if you set `SSH_MODE` (see below).  To bind a local
+forward tunnel to all interfaces, use an asterisk then the port desigation
+(e.g. `*:2222`).
+
 #### SSH_TUNNEL_HOST
 
 Specify the address (ip preferred) of the *target*.
@@ -133,7 +137,12 @@ set this to `/run/secrets/*secret-name*`
 In the event you wish to store the `known_hosts` in Docker Secrets, you may
 wish to set this to `/run/secrets/*secret-name*`
 
+#### SSH_MODE
 
+Defines how the tunnel will be set up:
+
+* `-R` is default, remote forward mode
+* `-L` means local forward mode
 
 ## Examples
 
