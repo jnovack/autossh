@@ -115,6 +115,10 @@ Mount the key you generated within the **Setup** step.
 
     -v /path/to/id_rsa:/id_rsa
 
+#### /known_hosts
+
+Mount the `known_hosts` file if you want to enable **STRICT_KEY_CHECKING**
+
 ## Examples
 
 ### docker-compose.yml
