@@ -25,6 +25,6 @@ ENV \
     AUTOSSH_LOGLEVEL=1
 
 RUN apk update && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
     apk add --update autossh && \
     rm -rf /var/lib/apt/lists/*
