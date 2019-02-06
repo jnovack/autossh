@@ -15,7 +15,8 @@ fi
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
 echo [INFO] Tunneling ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}
-
+eval $(ssh-agent -s)
+cat ${SSH_KEY_FILE} | ssh-add -k -
 echo autossh \
  -M 0 \
  -N \
@@ -24,7 +25,6 @@ echo autossh \
  -o ServerAliveCountMax=1 \
  -o "ExitOnForwardFailure yes" \
  -t -t \
- -i ${SSH_KEY_FILE:=/id_rsa} \
  ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
@@ -41,7 +41,6 @@ autossh \
  -o ServerAliveCountMax=1 \
  -o "ExitOnForwardFailure yes" \
  -t -t \
- -i ${SSH_KEY_FILE:=/id_rsa} \
  ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
