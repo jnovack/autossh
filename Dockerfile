@@ -21,7 +21,7 @@ ENV \
     TERM=xterm \
     AUTOSSH_LOGFILE=/dev/stdout \
     AUTOSSH_GATETIME=30         \
-    AUTOSSH_POLL=10             \
+    AUTOSSH_POLL=30             \
     AUTOSSH_FIRST_POLL=30       \
     AUTOSSH_LOGLEVEL=1
 

@@ -30,7 +30,7 @@ echo autossh \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
 
 AUTOSSH_PIDFILE=/autossh.pid \
-AUTOSSH_POLL=10 \
+AUTOSSH_POLL=30 \
 AUTOSSH_LOGLEVEL=0 \
 AUTOSSH_LOGFILE=/dev/stdout \
 autossh \
