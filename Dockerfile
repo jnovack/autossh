@@ -3,14 +3,15 @@ MAINTAINER Justin J. Novack <jnovack@gmail.com>
 
 ARG BUILD_DATE
 ARG VCS_REF
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.docker.dockerfile="/Dockerfile" \
-      org.label-schema.license="MIT" \
-      org.label-schema.name="jnovack/docker-autossh" \
-      org.label-schema.url="https://hub.docker.com/r/jnovack/docker-autossh/" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-type="Git" \
-      org.label-schema.vcs-url="https://github.com/jnovack/docker-autossh"
+LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
+      org.opencontainers.image.created=$BUILD_RFC3339 \
+      org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
+      org.opencontainers.image.documentation="https://github.com/jnovack/docker-autossh/README.md" \
+      org.opencontainers.image.description="Highly customizable AutoSSH docker container." \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.source="https://github.com/jnovack/docker-autossh" \
+      org.opencontainers.image.revision=$COMMIT \
+      org.opencontainers.image.url="https://hub.docker.com/r/jnovack/docker-autossh/"
 
 ENTRYPOINT ["/entrypoint.sh"]
 ADD /entrypoint.sh /entrypoint.sh
