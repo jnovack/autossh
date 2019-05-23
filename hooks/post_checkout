@@ -1,0 +1,6 @@
+#!/bin/bash
+# hooks/post_checkout
+# https://docs.docker.com/docker-cloud/builds/advanced/
+
+echo "[***] Unshallowing to get correct tags to work."
+git fetch --tags --unshallow --quiet origin

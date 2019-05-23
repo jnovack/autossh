@@ -1,0 +1,16 @@
+#!/bin/sh
+#!/bin/bash
+# hooks/build
+# https://docs.docker.com/docker-cloud/builds/advanced/
+
+# $IMAGE_NAME var is injected into the build so the tag is correct.
+echo "[***] Build hook running"
+
+docker build \
+    --build-arg VERSION=$(git describe --tags --always) \
+    --build-arg BUILD_RFC3339=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+    --build-arg BUILD_DATE=`date +%F` \
+    --build-arg BUILD_TIME=`date +%T%z` \
+    --build-arg COMMIT=`git rev-parse --short HEAD` \
+    --build-arg BRANCH=$(git rev-parse --abbrev-ref HEAD) \
+    -t $IMAGE_NAME .
