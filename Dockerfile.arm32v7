@@ -1,0 +1,40 @@
+FROM alpine:latest AS builder
+
+RUN apk --update --no-cache add curl tar && \
+    curl -L https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
+
+FROM arm32v7/alpine:latest
+
+# Copy across the qemu binary that was downloaded in the previous build step
+COPY --from=builder /qemu-arm-static /usr/bin
+
+MAINTAINER Justin J. Novack <jnovack@gmail.com> AND Lukas Plevac <lukasplevac@gmail.com>
+
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.license="MIT" \
+      org.label-schema.name="jnovack/docker-autossh" \
+      org.label-schema.url="https://hub.docker.com/r/jnovack/docker-autossh/" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-type="Git" \
+      org.label-schema.vcs-url="https://github.com/jnovack/docker-autossh"
+
+ENTRYPOINT ["/entrypoint.sh"]
+ADD /entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
+ENV \
+    TERM=xterm \
+    AUTOSSH_LOGFILE=/dev/stdout \
+    AUTOSSH_GATETIME=30         \
+    AUTOSSH_POLL=10             \
+    AUTOSSH_FIRST_POLL=30       \
+    AUTOSSH_LOGLEVEL=1
+
+RUN apk update && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
+    apk add --update autossh && \
+    apk add --update openssh-client && \
+    rm -rf /var/lib/apt/lists/*
