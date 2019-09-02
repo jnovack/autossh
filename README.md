@@ -196,3 +196,7 @@ docker host, and onto the private lan where the connection will terminate
           - 8.8.8.8
           - 4.2.2.4
 
+
+## on raspberry pi
+
+If you want run it under raspberry pi use the tag `latest-aarch64` i.e `jnovack/autossh:latest-aarch64`
