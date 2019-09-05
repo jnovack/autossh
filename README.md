@@ -4,18 +4,20 @@ Highly customizable AutoSSH docker container
 
 ## Overview
 
-**jnovack/autossh** is a small lightweight (8.07MB) image that attempts to
+**jnovack/autossh** is a small lightweight (~15MB) image that attempts to
 provide a secure way to establish an SSH Tunnel without including your keys in
 the image itself or linking to the host.
 
-There's thousands of *autossh* docker containers, why use this one? I hope you
-find it easier to use. It's smaller, more customizable, an automated build, so
-it's easy to use, and I hope you learn something!
+There are thousands of *autossh* docker containers, why use this one? I hope
+you find it easier to use. It is smaller, more customizable, an automated
+build, easy to use, and I hope you learn something. I tried to follow standards
+and established conventions where I could to make it easier to understand and
+copy and paste lines from this project to others to grow your knowledge!
 
 ## Description
 
-autossh is a program to start a copy of ssh and monitor it, restarting it as
-necessary should it die or stop passing traffic.
+``autossh`` is a program to start a copy of ssh and monitor it, restarting it
+as necessary should it die or stop passing traffic.
 
 Before we begin, I want to define some terms.
 
@@ -60,7 +62,7 @@ event there is ever a need to revoke one or the other.
     Your identification has been saved in /home/jnovack/.ssh/id_rsa.
     Your public key has been saved in /home/jnovack/.ssh/id_rsa.pub.
     The key fingerprint is:
-    00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff jnovack@yourmom
+    00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff jnovack@github
     The key's randomart image is:
     +-----[ RSA 4096]-----+
     |     _.-'''''-._     |
@@ -141,8 +143,8 @@ wish to set this to `/run/secrets/*secret-name*`
 
 Defines how the tunnel will be set up:
 
-* `-R` is default, remote forward mode
-* `-L` means local forward mode
+- `-R` is default, remote forward mode
+- `-L` means local forward mode
 
 ## Examples
 
@@ -161,7 +163,7 @@ on the private LAN of the docker host.  `ssh`ing to fake internet address
 docker host, and onto the private lan where the connection will terminate
 `192.168.123.45:22`.
 
-    version: '2.1'
+    version: '3.7'
 
     services:
       ssh-to-docker-host:
@@ -178,7 +180,7 @@ docker host, and onto the private lan where the connection will terminate
          - /etc/autossh/id_rsa:/id_rsa
         dns:
          - 8.8.8.8
-         - 4.2.2.4
+         - 1.1.1.1
 
       ssh-to-lan-endpoint:
         image: jnovack/autossh
@@ -194,5 +196,4 @@ docker host, and onto the private lan where the connection will terminate
           - /etc/autossh/id_rsa:/id_rsa
         dns:
           - 8.8.8.8
-          - 4.2.2.4
-
+          - 1.1.1.1
