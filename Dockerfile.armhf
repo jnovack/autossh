@@ -8,8 +8,6 @@ FROM arm32v7/alpine:latest
 # Copy across the qemu binary that was downloaded in the previous build step
 COPY --from=builder /qemu-arm-static /usr/bin
 
-MAINTAINER Justin J. Novack <jnovack@gmail.com> AND Lukas Plevac <lukasplevac@gmail.com>
-
 ARG BUILD_DATE
 ARG VCS_REF
 LABEL org.label-schema.build-date=$BUILD_DATE \
