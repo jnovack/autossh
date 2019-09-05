@@ -21,8 +21,8 @@ echo autossh \
  -M 0 \
  -N \
  -o StrictHostKeyChecking=${STRICT_HOSTS_KEY_CHECKING} ${KNOWN_HOSTS_ARG:=} \
- -o ServerAliveInterval=5 \
- -o ServerAliveCountMax=1 \
+ -o ServerAliveInterval=10 \
+ -o ServerAliveCountMax=3 \
  -o ExitOnForwardFailure=yes \
  -t -t \
  ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
@@ -37,8 +37,8 @@ autossh \
  -M 0 \
  -N \
  -o StrictHostKeyChecking=${STRICT_HOSTS_KEY_CHECKING} ${KNOWN_HOSTS_ARG:=}  \
- -o ServerAliveInterval=5 \
- -o ServerAliveCountMax=1 \
+ -o ServerAliveInterval=10 \
+ -o ServerAliveCountMax=3 \
  -o ExitOnForwardFailure=yes \
  -t -t \
  ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
