@@ -197,6 +197,8 @@ docker host, and onto the private lan where the connection will terminate
           - 4.2.2.4
 
 
-## on raspberry pi
+## ARM Support
 
-If you want run it under raspberry pi use the tag `latest-aarch64` i.e `jnovack/autossh:latest-aarch64`
+For running on an ARM processor, you may use the tag `latest-arm32v7`
+
+    docker pull jnovack/autossh:latest-arm32v7
