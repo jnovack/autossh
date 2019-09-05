@@ -1,5 +1,4 @@
 FROM alpine:3.9.4
-MAINTAINER Justin J. Novack <jnovack@gmail.com>
 
 ARG BUILD_DATE
 ARG VCS_REF
