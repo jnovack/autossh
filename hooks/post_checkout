@@ -1,0 +1,10 @@
+#!/bin/bash
+# hooks/post_checkout
+# https://docs.docker.com/docker-cloud/builds/advanced/
+
+if [ -f $(git rev-parse --git-dir)/shallow ]; then
+    echo "[***] Unshallowing to get correct tags to work."
+    git fetch --tags --unshallow --quiet origin
+else
+    echo "[***] Not a shallow repository."
+fi
