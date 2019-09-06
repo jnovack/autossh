@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/jnovack/docker-autossh" \
       org.opencontainers.image.revision=$COMMIT \
-      org.opencontainers.image.url="https://hub.docker.com/r/jnovack/docker-autossh/"
+      org.opencontainers.image.url="https://hub.docker.com/jnovack/autossh/"
 
 ENTRYPOINT ["/entrypoint.sh"]
 ADD /entrypoint.sh /entrypoint.sh
