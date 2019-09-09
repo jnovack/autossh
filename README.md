@@ -196,4 +196,11 @@ docker host, and onto the private lan where the connection will terminate
           - /etc/autossh/id_rsa:/id_rsa
         dns:
           - 8.8.8.8
-          - 1.1.1.1
+          - 4.2.2.4
+
+
+## ARM Support
+
+For running on an ARM processor, you may use the tag `latest-arm32v7`
+
+    docker pull jnovack/autossh:latest-arm32v7
