@@ -146,6 +146,10 @@ Defines how the tunnel will be set up:
 - `-R` is default, remote forward mode
 - `-L` means local forward mode
 
+#### SSH_BIND_IP
+
+Defines what IP (if the device has multiple IP) addresse to be used to access your port forwarding. In default is accessed from all IPs.
+
 ## Examples
 
 ### docker-compose.yml
