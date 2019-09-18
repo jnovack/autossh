@@ -14,7 +14,7 @@ fi
 # Pick a random port above 32768
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
-echo [INFO] Tunneling ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}
+echo [INFO] Tunneling over ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost} from ${SSH_TUNNEL_IP:=0.0.0.0}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}
 eval $(ssh-agent -s)
 cat ${SSH_KEY_FILE} | ssh-add -k -
 echo autossh \
@@ -25,7 +25,7 @@ echo autossh \
  -o ServerAliveCountMax=3 \
  -o ExitOnForwardFailure=yes \
  -t -t \
- ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ ${SSH_MODE:=-R} ${SSH_TUNNEL_IP}:${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
 
@@ -41,6 +41,6 @@ autossh \
  -o ServerAliveCountMax=3 \
  -o ExitOnForwardFailure=yes \
  -t -t \
- ${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
+ ${SSH_MODE:=-R} ${SSH_TUNNEL_IP}:${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} \
  -p ${SSH_HOSTPORT:=22} \
  ${SSH_HOSTUSER}@${SSH_HOSTNAME}
