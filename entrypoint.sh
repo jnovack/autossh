@@ -3,8 +3,8 @@
 # Set up key file
 KEY_FILE=${SSH_KEY_FILE:=/id_rsa}
 if [ ! -f "${KEY_FILE}" ]; then
-	echo "[ERROR] No SSH Key file found"
-	exit 1
+    echo "[ERROR] No SSH Key file found"
+    exit 1
 fi
 eval $(ssh-agent -s)
 cat "${SSH_KEY_FILE}" | ssh-add -k -
@@ -13,7 +13,10 @@ cat "${SSH_KEY_FILE}" | ssh-add -k -
 STRICT_HOSTS_KEY_CHECKING=no
 KNOWN_HOSTS=${SSH_KNOWN_HOSTS:=/known_hosts}
 if [ -f "${KNOWN_HOSTS}" ]; then
-    KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} -o CheckHostIP=no "
+    KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
+    if [ -z "${SSH_STRICT_HOST_IP_CHECK:=}" ]; then
+        KNOWN_HOSTS_ARG="${KNOWN_HOSTS_ARG}-o CheckHostIP=no "
+    fi
     STRICT_HOSTS_KEY_CHECKING=yes
 fi
 
