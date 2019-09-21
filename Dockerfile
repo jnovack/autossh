@@ -1,7 +1,7 @@
 FROM alpine:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
+ARG BUILD_RFC3339
+ARG COMMIT
 LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.created=$BUILD_RFC3339 \
       org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
