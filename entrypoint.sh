@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/dumb-init /bin/sh
 
 # Set up key file
 KEY_FILE=${SSH_KEY_FILE:=/id_rsa}

@@ -12,7 +12,10 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.revision=$COMMIT \
       org.opencontainers.image.url="https://hub.docker.com/r/jnovack/autossh/"
 
-RUN apk --no-cache add autossh openssh-client
-COPY /entrypoint.sh /init
+RUN apk --no-cache add \
+	autossh \
+	openssh-client \
+	dumb-init
+COPY /entrypoint.sh /entrypoint.sh
 
-CMD [ "/init" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
