@@ -129,12 +129,13 @@ tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
 however, you can tunnel other services such as redis (port: 6379),
 elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
-#### SSH_STRICT_HOST_IP_CHECK
+#### SSH_NO_STRICT_HOST_IP_CHECK
 
-Specify if you want the IP addresses of hosts to also be checked, if the
-`known_hosts` file is provided. This can cause issues for hosts with
-dynamic IP addresses, but provides additional protection for against DNS
-spoofing attacks.  (Default: disabled, set to any non-empty string to enable)
+Specify if you want the IP addresses of hosts to not be checked if the
+`known_hosts` file is provided.  This can avoid issues for hosts with
+dynamic IP addresses, but removes some additional protection against DNS
+spoofing attacks.  Host IP Checking is enabled by default, set this variable
+to any value to disable.
 
 #### SSH_KEY_FILE
 

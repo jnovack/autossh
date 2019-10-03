@@ -14,7 +14,7 @@ STRICT_HOSTS_KEY_CHECKING=no
 KNOWN_HOSTS=${SSH_KNOWN_HOSTS:=/known_hosts}
 if [ -f "${KNOWN_HOSTS}" ]; then
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
-    if [ -z "${SSH_STRICT_HOST_IP_CHECK:=}" ]; then
+    if [ -n ${SSH_NO_STRICT_HOST_IP_CHECK+x} ]; then
         KNOWN_HOSTS_ARG="${KNOWN_HOSTS_ARG}-o CheckHostIP=no "
     fi
     STRICT_HOSTS_KEY_CHECKING=yes
@@ -25,6 +25,8 @@ DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
 
 # Determine command line flags
+INFO_TUNNEL_SRC="${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}}"
+INFO_TUNNEL_DEST="${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
 COMMAND="autossh "\
 "-M 0 "\
 "-N "\
@@ -38,9 +40,6 @@ COMMAND="autossh "\
 "${SSH_HOSTUSER}@${SSH_HOSTNAME}"
 
 # Log to stdout
-INFO_TUNNEL_SRC="${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}}"
-INFO_TUNNEL_DEST="${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
-
 echo "[INFO] Using $(autossh -V)"
 echo "[INFO] Tunneling ${INFO_TUNNEL_SRC} to ${INFO_TUNNEL_DEST}"
 echo "> ${COMMAND}"
