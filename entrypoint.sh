@@ -14,7 +14,7 @@ fi
 # Pick a random port above 32768
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
-echo [INFO] Tunneling over ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost} from ${SSH_BIND_IP:=0.0.0.0}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}
+echo [INFO] Tunneling ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost} ${SSH_BIND_IP:=0.0.0.0}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}
 eval $(ssh-agent -s)
 cat ${SSH_KEY_FILE} | ssh-add -k -
 echo autossh \
