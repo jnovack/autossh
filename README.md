@@ -148,7 +148,7 @@ Defines how the tunnel will be set up:
 
 #### SSH_BIND_IP
 
-Defines what IP (if the device has multiple IP) addresse to be used to access your port forwarding. In default is accessed from all IPs.
+If the remote endpoint has multiple IP addresses or networks, you can define which IP address autossh will use to bind. By default, autossh will bind on all interfaces and IP addresses (0.0.0.0).
 
 ## Examples
 
