@@ -9,12 +9,13 @@ fi
 eval $(ssh-agent -s)
 cat "${SSH_KEY_FILE}" | ssh-add -k -
 
-# Set up known_hosts file if needed
+# If known_hosts is provided, STRICT_HOST_KEY_CHECKING=yes
+# Default CheckHostIP=yes unless SSH_STRICT_HOST_IP_CHECK=false
 STRICT_HOSTS_KEY_CHECKING=no
 KNOWN_HOSTS=${SSH_KNOWN_HOSTS:=/known_hosts}
 if [ -f "${KNOWN_HOSTS}" ]; then
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
-    if [ -n ${SSH_NO_STRICT_HOST_IP_CHECK+x} ]; then
+    if [ "${SSH_STRICT_HOST_IP_CHECK}" = false ]; then
         KNOWN_HOSTS_ARG="${KNOWN_HOSTS_ARG}-o CheckHostIP=no "
     fi
     STRICT_HOSTS_KEY_CHECKING=yes
