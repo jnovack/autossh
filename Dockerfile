@@ -1,7 +1,8 @@
-FROM alpine:3.9.4
+FROM alpine:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
+ARG BUILD_RFC3339
+ARG COMMIT
+ARG VERSION
 LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.created=$BUILD_RFC3339 \
       org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
@@ -10,21 +11,12 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/jnovack/docker-autossh" \
       org.opencontainers.image.revision=$COMMIT \
+      org.opencontainers.image.version=$VERSION \
       org.opencontainers.image.url="https://hub.docker.com/r/jnovack/autossh/"
 
-ENTRYPOINT ["/entrypoint.sh"]
-ADD /entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+RUN apk --no-cache add \
+	autossh \
+	dumb-init
+COPY /entrypoint.sh /entrypoint.sh
 
-ENV \
-    TERM=xterm \
-    AUTOSSH_LOGFILE=/dev/stdout \
-    AUTOSSH_GATETIME=30         \
-    AUTOSSH_POLL=30             \
-    AUTOSSH_FIRST_POLL=30       \
-    AUTOSSH_LOGLEVEL=1
-
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
-    apk update && \
-    apk add --update autossh openssh-client && \
-    rm -rf /var/lib/apt/lists/*
+ENTRYPOINT [ "/entrypoint.sh" ]
