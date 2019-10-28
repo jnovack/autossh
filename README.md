@@ -115,7 +115,7 @@ Mount the key you generated within the **Setup** step, or set
 
 #### /known_hosts
 
-Mount the `known_hosts` file if you want to enable **STRICT_KEY_CHECKING**,
+Mount the `known_hosts` file if you want to enable `StrictHostKeyChecking`,
 or set `SSH_KNOWN_HOSTS`.
 
     -v /path/to/known_hosts:/known_hosts
@@ -155,8 +155,8 @@ elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
 #### SSH_STRICT_HOST_IP_CHECK
 
-Set to `false` if you want the IP addresses of hosts to not be checked if
-the `known_hosts` file is provided.  This can avoid issues for hosts with
+Set to `false` if you want the IP addresses of hosts to **not** be checked if
+the `known_hosts` file is provided.  This can help avoid issues for hosts with
 dynamic IP addresses, but removes some additional protection against DNS
 spoofing attacks.  Host IP Checking is enabled by default.
 
@@ -165,7 +165,7 @@ spoofing attacks.  Host IP Checking is enabled by default.
 In the event you wish to store the key in Docker Secrets, you may wish to
 set this to `/run/secrets/*secret-name*`
 
-#### SSH_KNOWN_HOSTS
+#### SSH_KNOWN_HOSTS_FILE
 
 In the event you wish to store the `known_hosts` in Docker Secrets, you may
 wish to set this to `/run/secrets/*secret-name*`
