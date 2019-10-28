@@ -42,11 +42,35 @@ addressible IP address; whereas the *remote* machine has an address that is
 reachable by both *target* and *source*. And *source* can only reach *remote*.
 
     target ---> |firewall| >--- remote ---< |firewall| <--- source
-    10.1.1.101             [public.ip.addr]          192.168.1.101
+    10.1.1.101               203.0.113.10            192.168.1.101
 
 The *target* (running **autossh**) connects up to the *remote* server and
 keeps a tunnel alive so that *source* can proxy through *remote* and reach
 resources on *target*.  Think of it as "long distance port-forwarding".
+
+### Example
+
+You are running `docker` on *target*, your home computer.  (Note: Linux Docker
+hosts automatically create a `docker0` interface with `172.17.0.1` so the
+containers can route to the host and out to other networks.)  You have a
+Virtual Private Server (VPS) on the Internet that is accessible to all.  This
+*local* docker container will make a connection to the *remote* VPS and tunnel
+*remote* port 2222 to *target* port 22.  Any connection to *remote* port 2222
+will actually be to the *target* server on port 22. This is known as a "reverse
+tunnel".
+
+    local
+    172.17.0.1
+    target ---> |firewall| ---> remote <--- |firewall| <--- source
+    10.1.1.101               203.0.113.10            192.168.1.101
+
+#### Disclaimer
+
+By tunneling the *target* port 22 to *remote* port 2222, you may be exposing
+a home server (and by extension, your home network) to the Internet at large,
+commonly known as "a bad thing".  Be sure to use appropriately use firewalls,
+`fail2ban` scripts, non-root access, key-based authentication only, and other
+security measures as necessary.
 
 ## Setup
 
@@ -54,15 +78,15 @@ To start, you will need to generate an SSH key on the Docker host. This will
 ensure the key for the container is separate from your normal user key in the
 event there is ever a need to revoke one or the other.
 
-    $ ssh-keygen -t rsa -b 4096 -C "autossh"
+    $ ssh-keygen -t rsa -b 4096 -C "docker-autossh" -f autossh_id_rsa
     Generating public/private rsa key pair.
-    Enter file in which to save the key (/home/jnovack/.ssh/id_rsa):
+    Enter file in which to save the key (/home/jnovack/autossh_id_rsa):
     Enter passphrase (empty for no passphrase):
     Enter same passphrase again:
-    Your identification has been saved in /home/jnovack/.ssh/id_rsa.
-    Your public key has been saved in /home/jnovack/.ssh/id_rsa.pub.
+    Your identification has been saved in /home/jnovack/autossh_id_rsa.
+    Your public key has been saved in /home/jnovack/autossh_id_rsa.pub.
     The key fingerprint is:
-    00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff jnovack@github
+    00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff docker-autossh
     The key's randomart image is:
     +-----[ RSA 4096]-----+
     |     _.-'''''-._     |
@@ -204,7 +228,6 @@ docker host, and onto the private lan where the connection will terminate
         dns:
           - 8.8.8.8
           - 4.2.2.4
-
 
 ## ARM Support
 
