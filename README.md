@@ -229,8 +229,15 @@ docker host, and onto the private lan where the connection will terminate
           - 8.8.8.8
           - 4.2.2.4
 
-## ARM Support
+## Tags
 
-For running on an ARM processor, you may use the tag `latest-arm32v7`
+Docker pulls the correct image for the current architecture, so Raspberry Pis
+will download and run the 32-bit ARM version (`arm32v7`) and EC2 A1 instances
+will download and run the 64-bit ARM version (`arm64v8`).
+
+- `latest`: `amd64`, `arm32v7`, `arm64v8`
+
+You can also directly download a specific version by adding the architecture
+to the tag, (e.g. `latest-arm32v7`)
 
     docker pull jnovack/autossh:latest-arm32v7

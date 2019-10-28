@@ -1,0 +1,30 @@
+FROM alpine:latest AS builder
+
+RUN apk --update --no-cache add curl tar && \
+    curl -L https://github.com/balena-io/qemu/releases/download/v3.0.0%2Bresin/qemu-3.0.0+resin-arm.tar.gz | tar zxvf - -C . && mv qemu-3.0.0+resin-arm/qemu-arm-static .
+
+FROM arm64v8/alpine:latest
+
+# Copy across the qemu binary that was downloaded in the previous build step
+COPY --from=builder /qemu-arm-static /usr/bin
+
+ARG BUILD_RFC3339
+ARG COMMIT
+ARG VERSION
+LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
+      org.opencontainers.image.created=$BUILD_RFC3339 \
+      org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
+      org.opencontainers.image.documentation="https://github.com/jnovack/docker-autossh/README.md" \
+      org.opencontainers.image.description="Highly customizable AutoSSH docker container." \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.source="https://github.com/jnovack/docker-autossh" \
+      org.opencontainers.image.revision=$COMMIT \
+      org.opencontainers.image.version=$VERSION \
+      org.opencontainers.image.url="https://hub.docker.com/r/jnovack/autossh/"
+
+RUN apk --no-cache add \
+	autossh \
+	dumb-init
+COPY /entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
