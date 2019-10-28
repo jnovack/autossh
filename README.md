@@ -238,6 +238,6 @@ will download and run the 64-bit ARM version (`arm64v8`).
 - `latest`: `amd64`, `arm32v7`, `arm64v8`
 
 You can also directly download a specific version by adding the architecture
-to the tag, (e.g. `latest-arm32v7`)
+to the tag (e.g. `latest-arm32v7`).
 
     docker pull jnovack/autossh:latest-arm32v7
