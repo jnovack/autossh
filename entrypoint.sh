@@ -46,10 +46,4 @@ echo "[INFO] Tunneling ${INFO_TUNNEL_SRC} to ${INFO_TUNNEL_DEST}"
 echo "> ${COMMAND}"
 
 # Run command
-AUTOSSH_PIDFILE=/autossh.pid \
-AUTOSSH_POLL=30 \
-AUTOSSH_GATETIME=30 \
-AUTOSSH_FIRST_POLL=30 \
-AUTOSSH_LOGLEVEL=0 \
-AUTOSSH_LOGFILE=/dev/stdout \
 exec ${COMMAND}
