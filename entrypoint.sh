@@ -21,6 +21,13 @@ if [ -f "${KNOWN_HOSTS}" ]; then
     STRICT_HOSTS_KEY_CHECKING=yes
 fi
 
+# Add entry to /etc/passwd if we are running non-root
+if [[ $(id -u) != "0" ]]; then
+  USER="autossh:x:$(id -u):$(id -g):autossh:/tmp:/bin/sh"
+  echo "Creating non-root-user = $USER"
+  echo "$USER" >> /etc/passwd
+fi
+
 # Pick a random port above 32768
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
