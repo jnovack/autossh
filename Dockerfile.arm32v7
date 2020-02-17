@@ -25,6 +25,15 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
 RUN apk --no-cache add \
 	autossh \
 	dumb-init
+
+ENV \
+  AUTOSSH_PIDFILE=/autossh.pid \
+  AUTOSSH_POLL=30 \
+  AUTOSSH_GATETIME=30 \
+  AUTOSSH_FIRST_POLL=30 \
+  AUTOSSH_LOGLEVEL=0 \
+  AUTOSSH_LOGFILE=/dev/stdout
+
 COPY /entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
