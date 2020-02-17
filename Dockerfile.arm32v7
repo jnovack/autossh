@@ -24,6 +24,7 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
 
 RUN apk --no-cache add \
 	autossh \
+  net-tools \
 	dumb-init
 
 ENV \
