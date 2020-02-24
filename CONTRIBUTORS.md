@@ -1,3 +1,4 @@
 # Contributors
 
-Lukas Plevac <LukasPlevac@gmail.com>
+* [@ccremer](https://github.com/ccremer)
+* Lukas Plevac <LukasPlevac@gmail.com>

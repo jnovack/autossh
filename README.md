@@ -150,8 +150,33 @@ wish to set this to `/run/secrets/*secret-name*`
 
 Defines how the tunnel will be set up:
 
-- `-R` is default, remote forward mode
-- `-L` means local forward mode
+- `-R` is default, remote forward mode.
+- `-L` means local forward mode.
+
+#### SERVER_ALIVE_INTERVAL
+
+Sets a timeout interval in seconds after which if no data has been
+received from the server, ssh(1) will send a message through the encrypted channel to
+request a response from the server.
+
+- `0` turns the option off.
+- `10` is default for this image.
+
+Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+
+#### SERVER_ALIVE_COUNT_MAX
+
+Sets the threshold of alive messages after which the connection is terminated and reestablished.
+
+- `3` is the default for this image.
+- `SERVER_ALIVE_INTERVAL=0` turns this variable ineffective.
+
+Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+
+#### Additional Environment variables
+
+* [`autossh(1)`](https://linux.die.net/man/1/autossh)
+* [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
 ## Examples
 
@@ -170,41 +195,42 @@ on the private LAN of the docker host.  `ssh`ing to fake internet address
 docker host, and onto the private lan where the connection will terminate
 `192.168.123.45:22`.
 
-    version: '3.7'
+```yaml
+version: '3.7'
 
-    services:
-      ssh-to-docker-host:
-        image: jnovack/autossh
-        container_name: autossh-ssh-to-docker-host
-        environment:
-          - SSH_HOSTUSER=sshuser
-          - SSH_HOSTNAME=203.0.113.10
-          - SSH_TUNNEL_REMOTE=2222
-          - SSH_TUNNEL_HOST=172.17.0.1
-          - SSH_TUNNEL_LOCAL=22
-        restart: always
-        volumes:
-         - /etc/autossh/id_rsa:/id_rsa
-        dns:
-         - 8.8.8.8
-         - 1.1.1.1
+services:
+  ssh-to-docker-host:
+    image: jnovack/autossh
+    container_name: autossh-ssh-to-docker-host
+    environment:
+      - SSH_HOSTUSER=sshuser
+      - SSH_HOSTNAME=203.0.113.10
+      - SSH_TUNNEL_REMOTE=2222
+      - SSH_TUNNEL_HOST=172.17.0.1
+      - SSH_TUNNEL_LOCAL=22
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
-      ssh-to-lan-endpoint:
-        image: jnovack/autossh
-        container_name: autossh-ssh-to-lan-endpoint
-        environment:
-          - SSH_HOSTUSER=sshuser
-          - SSH_HOSTNAME=203.0.113.10
-          - SSH_TUNNEL_REMOTE=22222
-          - SSH_TUNNEL_HOST=198.168.123.45
-          - SSH_TUNNEL_LOCAL=22
-        restart: always
-        volumes:
-          - /etc/autossh/id_rsa:/id_rsa
-        dns:
-          - 8.8.8.8
-          - 4.2.2.4
-
+  ssh-to-lan-endpoint:
+    image: jnovack/autossh
+    container_name: autossh-ssh-to-lan-endpoint
+    environment:
+      - SSH_HOSTUSER=sshuser
+      - SSH_HOSTNAME=203.0.113.10
+      - SSH_TUNNEL_REMOTE=22222
+      - SSH_TUNNEL_HOST=198.168.123.45
+      - SSH_TUNNEL_LOCAL=22
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 4.2.2.4
+```
 
 ## ARM Support
 
