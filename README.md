@@ -177,8 +177,33 @@ wish to set this to `/run/secrets/*secret-name*`
 
 Defines how the tunnel will be set up:
 
-- `-R` is default, remote forward mode
-- `-L` means local forward mode
+- `-R` is default, remote forward mode.
+- `-L` means local forward mode.
+
+#### SERVER_ALIVE_INTERVAL
+
+Sets a timeout interval in seconds after which if no data has been
+received from the server, ssh(1) will send a message through the encrypted channel to
+request a response from the server.
+
+- `0` turns the option off.
+- `10` is default for this image.
+
+Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+
+#### SERVER_ALIVE_COUNT_MAX
+
+Sets the threshold of alive messages after which the connection is terminated and reestablished.
+
+- `3` is the default for this image.
+- `SERVER_ALIVE_INTERVAL=0` turns this variable ineffective.
+
+Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+
+#### Additional Environment variables
+
+* [`autossh(1)`](https://linux.die.net/man/1/autossh)
+* [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
 ## Examples
 
