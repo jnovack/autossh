@@ -125,16 +125,16 @@ or set `SSH_KNOWN_HOSTS`.
 
 ### Environment Variables
 
-#### SSH_HOSTUSER
+#### SSH_REMOTE_USER
 
 Specify the usename on the *remote* endpoint.  (Default: `root`)
 
-#### SSH_HOSTNAME
+#### SSH_REMOTE_HOST
 
 Specify the address (ip preferred) of the *remote* endpoint. (Default:
 `localhost`)
 
-#### SSH_TUNNEL_REMOTE
+#### SSH_REMOTE_PORT
 
 Specify the port number on the *remote* endpoint which will serve as the
 tunnel entrance. (Default: random > 32768)  If you do not want a new port
@@ -145,11 +145,11 @@ This option reverses if you set `SSH_MODE` (see below).  To bind a local
 forward tunnel to all interfaces, use an asterisk then the port desigation
 (e.g. `*:2222`).
 
-#### SSH_TUNNEL_HOST
+#### SSH_TARGET_HOST
 
 Specify the address (ip preferred) of the *target*.
 
-#### SSH_TUNNEL_LOCAL
+#### SSH_TARGET_PORT
 
 Specify the port number on the *target* endpoint which will serve as the
 tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
@@ -229,11 +229,11 @@ docker host, and onto the private lan where the connection will terminate
         image: jnovack/autossh
         container_name: autossh-ssh-to-docker-host
         environment:
-          - SSH_HOSTUSER=sshuser
-          - SSH_HOSTNAME=203.0.113.10
-          - SSH_TUNNEL_REMOTE=2222
-          - SSH_TUNNEL_HOST=172.17.0.1
-          - SSH_TUNNEL_LOCAL=22
+          - SSH_REMOTE_USER=sshuser
+          - SSH_REMOTE_HOST=203.0.113.10
+          - SSH_REMOTE_PORT=2222
+          - SSH_TARGET_HOST=172.17.0.1
+          - SSH_TARGET_PORT=22
         restart: always
         volumes:
          - /etc/autossh/id_rsa:/id_rsa
@@ -245,11 +245,11 @@ docker host, and onto the private lan where the connection will terminate
         image: jnovack/autossh
         container_name: autossh-ssh-to-lan-endpoint
         environment:
-          - SSH_HOSTUSER=sshuser
-          - SSH_HOSTNAME=203.0.113.10
-          - SSH_TUNNEL_REMOTE=22222
-          - SSH_TUNNEL_HOST=198.168.123.45
-          - SSH_TUNNEL_LOCAL=22
+          - SSH_REMOTE_USER=sshuser
+          - SSH_REMOTE_HOST=203.0.113.10
+          - SSH_REMOTE_PORT=22222
+          - SSH_TARGET_HOST=198.168.123.45
+          - SSH_TARGET_PORT=22
         restart: always
         volumes:
           - /etc/autossh/id_rsa:/id_rsa

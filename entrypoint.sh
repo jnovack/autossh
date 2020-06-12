@@ -36,7 +36,7 @@ let "DEFAULT_PORT += 32768"
 
 # Log to stdout
 echo "[INFO] Using $(autossh -V)"
-echo "[INFO] Tunneling ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
+echo "[INFO] Tunneling ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT:=${DEFAULT_PORT}} to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
 
 COMMAND="autossh "\
 "-M 0 "\
@@ -46,9 +46,9 @@ COMMAND="autossh "\
 "-o ServerAliveCountMax=${SERVER_ALIVE_COUNT_MAX:-3} "\
 "-o ExitOnForwardFailure=yes "\
 "-t -t "\
-"${SSH_MODE:=-R} ${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} "\
+"${SSH_MODE:=-R} ${SSH_REMOTE_PORT}:${SSH_TARGET_HOST}:${SSH_TARGET_PORT} "\
 "-p ${SSH_HOSTPORT:=22} "\
-"${SSH_HOSTUSER}@${SSH_HOSTNAME}"
+"${SSH_REMOTE_USER}@${SSH_REMOTE_HOST}"
 
 echo "[INFO] # ${COMMAND}"
 
