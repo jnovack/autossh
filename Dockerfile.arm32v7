@@ -24,9 +24,9 @@ LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
 
 RUN \
   apk --no-cache add \
-	  autossh \
+    autossh \
     net-tools \
-	  dumb-init && \
+    dumb-init && \
   chmod g+w /etc/passwd
 
 ENV \
