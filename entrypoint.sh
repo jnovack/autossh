@@ -33,8 +33,11 @@ DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
 
 # Determine command line flags
-INFO_TUNNEL_SRC="${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}}"
-INFO_TUNNEL_DEST="${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
+
+# Log to stdout
+echo "[INFO] Using $(autossh -V)"
+echo "[INFO] Tunneling ${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}} to ${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
+
 COMMAND="autossh "\
 "-M 0 "\
 "-N "\
@@ -47,10 +50,7 @@ COMMAND="autossh "\
 "-p ${SSH_HOSTPORT:=22} "\
 "${SSH_HOSTUSER}@${SSH_HOSTNAME}"
 
-# Log to stdout
-echo "[INFO] Using $(autossh -V)"
-echo "[INFO] Tunneling ${INFO_TUNNEL_SRC} to ${INFO_TUNNEL_DEST}"
-echo "> ${COMMAND}"
+echo "[INFO] # ${COMMAND}"
 
 # Run command
 exec ${COMMAND}
