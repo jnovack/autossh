@@ -1,3 +1,3 @@
 # Authors
 
-Justin J. Novack <jnovack@gmail.com> (@jnovack)
+- [Justin J. Novack](https://github.com/jnovack)
