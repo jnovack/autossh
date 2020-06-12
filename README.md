@@ -1,5 +1,8 @@
 # docker-autossh
 
+[![](https://badgen.net/badge/jnovack/autossh/blue?icon=docker)](https://hub.docker.com/r/jnovack/autossh)
+[![](https://badgen.net/badge/jnovack/docker-autossh/purple?icon=github)](https://github.com/jnovack/docker-autossh)
+
 Highly customizable AutoSSH docker container
 
 ## Overview
