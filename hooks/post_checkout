@@ -12,6 +12,7 @@ else
 fi
 
 ## Check to see if we're building a different architecture
+## QEMU uses the outdated arm/aarch64 naming conventions.
 BUILD_ARCH=$(echo "${DOCKERFILE_PATH}" | cut -d '.' -f 2)
 
 [ "${BUILD_ARCH}" == "Dockerfile" ] && \
