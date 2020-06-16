@@ -263,7 +263,7 @@ Docker pulls the correct image for the current architecture, so Raspberry Pis
 will download and run the 32-bit ARM version (`arm32v7`) and EC2 A1 instances
 will download and run the 64-bit ARM version (`arm64v8`).
 
-- `latest`: `amd64`, `arm32v7`, `arm64v8`
+- `latest`: `arm32v7`, `arm64v8`
 
 You can also directly download a specific version by adding the architecture
 to the tag (e.g. `latest-arm32v7`).
