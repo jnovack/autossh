@@ -12,19 +12,46 @@ else
 fi
 
 ## Check to see if we're building a different architecture
-## QEMU uses the outdated arm/aarch64 naming conventions.
-BUILD_ARCH=$(echo "${DOCKERFILE_PATH}" | cut -d '.' -f 2)
+[ "$(echo "${DOCKERFILE_PATH}" | cut -d '.' -f 2)" == "Dockerfile" ] && \
+    { echo '[---] qemu-user-static: Download not required for current arch'; exit 0; }
 
-[ "${BUILD_ARCH}" == "Dockerfile" ] && \
-    { echo 'qemu-user-static: Download not required for current arch'; exit 0; }
+case "$DOCKER_TAG" in
+    *amd64)
+        TARGET_ARCH="amd64"
+        QEMU_ARCH="x86_64"
+        ;;
+    *arm32v5)
+        TARGET_ARCH="arm32v5"
+        QEMU_ARCH="arm"
+        ;;
+    *arm32v6)
+        TARGET_ARCH="arm32v6"
+        QEMU_ARCH="arm"
+        ;;
+    *arm32v7)
+        TARGET_ARCH="arm32v7"
+        QEMU_ARCH="arm"
+        ;;
+    *arm64v8)
+        TARGET_ARCH="arm64v8"
+        QEMU_ARCH="aarch64"
+        ;;
+    *i386)
+        TARGET_ARCH="i386"
+        QEMU_ARCH="i386"
+        ;;
+    *)
+        echo "[---] Unknown target architecture, skipping qemu-user-static download"
+        exit 0
+        ;;
+esac
 
-QEMU_USER_STATIC_ARCH=$([ "${BUILD_ARCH}" == "armhf" ] && echo "${BUILD_ARCH::-2}" || echo "${BUILD_ARCH}")
-QEMU_USER_STATIC_DOWNLOAD_URL="https://github.com/multiarch/qemu-user-static/releases/download"
-QEMU_USER_STATIC_LATEST_TAG=$(curl -s https://api.github.com/repos/multiarch/qemu-user-static/tags \
+QEMU_DOWNLOAD_URL="https://github.com/multiarch/qemu-user-static/releases/download"
+QEMU_LATEST_TAG=$(curl -s https://api.github.com/repos/multiarch/qemu-user-static/tags \
     | grep 'name.*v[0-9]' \
     | head -n 1 \
     | cut -d '"' -f 4)
 
-echo "[***] Downloading ${QEMU_USER_STATIC_DOWNLOAD_URL}/${QEMU_USER_STATIC_LATEST_TAG}/x86_64_qemu-${QEMU_USER_STATIC_ARCH}-static.tar.gz"
-curl -sL "${QEMU_USER_STATIC_DOWNLOAD_URL}/${QEMU_USER_STATIC_LATEST_TAG}/x86_64_qemu-${QEMU_USER_STATIC_ARCH}-static.tar.gz" \
+echo "[***] Downloading ${QEMU_DOWNLOAD_URL}/${QEMU_LATEST_TAG}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz"
+curl -sL "${QEMU_DOWNLOAD_URL}/${QEMU_LATEST_TAG}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz" \
     | tar xzv
