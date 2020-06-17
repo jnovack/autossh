@@ -41,8 +41,6 @@ do
         -t ${IMAGE_NAME}_${BUILD_ARCH} \
         .
 
-    docker push ${IMAGE_NAME}_${BUILD_ARCH}
-
 done
 
 

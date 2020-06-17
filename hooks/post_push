@@ -35,6 +35,33 @@ function add_tag() {
 }
 
 
+## Push all variant images
+## must be done in post_push
+for FILE in ${DOCKERFILE_PATH}.*
+do
+    TARGET_ARCH=$(echo "${FILE}" | cut -d '.' -f 2)
+
+    ## FUDGE Factor because Docker Hub does not respect "32"
+    case "$TARGET_ARCH" in
+        *arm32v5)
+            BUILD_ARCH="armv5"
+            ;;
+        *arm32v6)
+            BUILD_ARCH="armv6"
+            ;;
+        *arm32v7)
+            BUILD_ARCH="armv7"
+            ;;
+        *)
+            BUILD_ARCH="${TARGET_ARCH}"
+            ;;
+    esac
+
+    docker push ${IMAGE_NAME}_${BUILD_ARCH}
+
+done
+
+
 ## The git repository MUST have tags as "v2.1.3", which updates docker tags "2.1.3", "2.1", "2".
 TAG=`git describe --tag --match "v*"`
 
