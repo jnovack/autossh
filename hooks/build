@@ -31,6 +31,8 @@ do
             ;;
     esac
 
+    docker run --rm --privileged multiarch/qemu-user-static:register --reset
+
     docker build \
         --file "${DOCKERFILE_PATH}.${TARGET_ARCH}" \
         --build-arg BUILD_RFC3339=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
