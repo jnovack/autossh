@@ -2,13 +2,50 @@
 # hooks/build
 # https://docs.docker.com/docker-cloud/builds/advanced/
 
-# $IMAGE_NAME var is injected into the build so the tag is correct.
+## requires to be an architecture+variant as defined by the manifest
+DEFAULT_ARCH="amd64"
+
+
+## $IMAGE_NAME var is injected into the build so the tag is correct.
 echo "[***] Build hook running"
 
+
+## Build all variant images.
+for FILE in ${DOCKERFILE_PATH}.*
+do
+    TARGET_ARCH=$(echo "${FILE}" | cut -d '.' -f 2)
+
+    ## FUDGE Factor because Docker Hub does not respect "32"
+    case "$TARGET_ARCH" in
+        *arm32v5)
+            TARGET_ARCH="amdv5"
+            ;;
+        *arm32v6)
+            TARGET_ARCH="amdv6"
+            ;;
+        *arm32v7)
+            TARGET_ARCH="amdv7"
+            ;;
+        *)
+            TARGET_ARCH="${TARGET_ARCH}"
+            ;;
+    esac
+
+    docker build \
+        --file "${DOCKERFILE_PATH}.${TARGET_ARCH}" \
+        --build-arg BUILD_RFC3339=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+        --build-arg COMMIT=$(git rev-parse --short HEAD) \
+        --build-arg VERSION=$(git describe --tags --always) \
+        -t ${IMAGE_NAME}_${TARGET_ARCH} \
+        .
+done
+
+
+## Build the prime image at the end.
 docker build \
     --file "${DOCKERFILE_PATH}" \
     --build-arg BUILD_RFC3339=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
     --build-arg COMMIT=$(git rev-parse --short HEAD) \
     --build-arg VERSION=$(git describe --tags --always) \
-    -t $IMAGE_NAME \
+    -t ${IMAGE_NAME}_${DEFAULT_ARCH} \
     .
