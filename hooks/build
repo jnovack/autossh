@@ -18,16 +18,16 @@ do
     ## FUDGE Factor because Docker Hub does not respect "32"
     case "$TARGET_ARCH" in
         *arm32v5)
-            TARGET_ARCH="amdv5"
+            BUILD_ARCH="amdv5"
             ;;
         *arm32v6)
-            TARGET_ARCH="amdv6"
+            BUILD_ARCH="amdv6"
             ;;
         *arm32v7)
-            TARGET_ARCH="amdv7"
+            BUILD_ARCH="amdv7"
             ;;
         *)
-            TARGET_ARCH="${TARGET_ARCH}"
+            BUILD_ARCH="${TARGET_ARCH}"
             ;;
     esac
 
@@ -36,7 +36,7 @@ do
         --build-arg BUILD_RFC3339=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
         --build-arg COMMIT=$(git rev-parse --short HEAD) \
         --build-arg VERSION=$(git describe --tags --always) \
-        -t ${IMAGE_NAME}_${TARGET_ARCH} \
+        -t ${IMAGE_NAME}_${BUILD_ARCH} \
         .
 done
 
