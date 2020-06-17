@@ -19,26 +19,32 @@ chmod +x manifest-tool
 ## Check to see if we're building a different architecture
 case "$DOCKER_TAG" in
     *amd64)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="amd64"
         ;;
     *arm32v5)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="arm/v5"
         ;;
     *arm32v6)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="arm/v6"
         ;;
     *arm32v7)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="arm/v7"
         ;;
     *arm64v8)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="arm64/v8"
         ;;
     *i386)
+        echo "[---] Target Architecture: ${DOCKER_TAG}"
         TARGET_ARCH="386"
         ;;
     *)
-        echo "[---] Unknown target architecture, skipping manifest update"
-        exit 0
+        echo "[!!!] Unknown target architecture, defaulting as amd64"
+        TARGET_ARCH="amd64"
         ;;
 esac
 
