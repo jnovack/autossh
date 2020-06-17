@@ -260,10 +260,11 @@ docker host, and onto the private lan where the connection will terminate
 ## Tags
 
 Docker pulls the correct image for the current architecture, so Raspberry Pis
-will download and run the 32-bit ARM version (`arm32v7`) and EC2 A1 instances
-will download and run the 64-bit ARM version (`arm64v8`).
+will download and run the 32-bit ARMv7 version (`arm32v7`), Raspberry Pi Zeros
+will download and run the 32-bit ARMv6 version (`arm32v6`) and EC2 A1
+instances will download and run the 64-bit ARM version (`arm64v8`).
 
-- `latest`: `arm32v7`, `arm64v8`
+- `latest`: `arm32v6`, `arm32v7`, `arm64v8`
 
 You can also directly download a specific version by adding the architecture
 to the tag (e.g. `latest-arm32v7`).
