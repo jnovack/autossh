@@ -18,13 +18,13 @@ do
     ## FUDGE Factor because Docker Hub does not respect "32"
     case "$TARGET_ARCH" in
         *arm32v5)
-            BUILD_ARCH="amdv5"
+            BUILD_ARCH="armv5"
             ;;
         *arm32v6)
-            BUILD_ARCH="amdv6"
+            BUILD_ARCH="armv6"
             ;;
         *arm32v7)
-            BUILD_ARCH="amdv7"
+            BUILD_ARCH="armv7"
             ;;
         *)
             BUILD_ARCH="${TARGET_ARCH}"
