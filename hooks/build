@@ -53,4 +53,7 @@ docker build \
     -t ${IMAGE_NAME}_${DEFAULT_ARCH} \
     .
 
+## Push the default arch image so manifest-tool can find it
+docker push ${IMAGE_NAME}_${DEFAULT_ARCH}
+
 docker tag ${IMAGE_NAME}_${DEFAULT_ARCH} ${IMAGE_NAME}
