@@ -52,3 +52,5 @@ docker build \
     --build-arg VERSION=$(git describe --tags --always) \
     -t ${IMAGE_NAME}_${DEFAULT_ARCH} \
     .
+
+docker tag ${IMAGE_NAME}_${DEFAULT_ARCH} ${IMAGE_NAME}
