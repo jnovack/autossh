@@ -29,8 +29,8 @@ function add_tag() {
     echo "[---] Running ./manifest-tool push from-args --platforms '${2}' --template '${IMAGE_NAME}_ARCHVARIANT' --target '${DOCKER_REPO}:${1}'"
     ./manifest-tool push from-args \
         --platforms ${2} \
-        --template '${IMAGE_NAME}_ARCHVARIANT' \
-        --target '$DOCKER_REPO:${1}'
+        --template ${IMAGE_NAME}_ARCHVARIANT \
+        --target ${DOCKER_REPO}:${1}
 
 }
 
