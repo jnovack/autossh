@@ -122,7 +122,7 @@ do
 done
 
 ## Tag all the images
-add_tag ${IMAGE_NAME} ${MULTIARCH}
+add_tag ${DOCKER_TAG} ${MULTIARCH}
 
 ## Tag all the releases
 num='^[0-9]+$'
