@@ -2,19 +2,65 @@
 # hooks/post_push
 # https://docs.docker.com/docker-cloud/builds/advanced/
 # https://semver.org/
+# https://github.com/ckulka/docker-multi-arch-example/
 
+# Use manifest-tool to create the manifest, given the experimental
+# "docker manifest" command isn't available yet on Docker Hub.
+TOOL_DOWNLOAD_URL="https://github.com/estesp/manifest-tool/releases/download"
+TOOL_LATEST_TAG=$(curl -s https://api.github.com/repos/estesp/manifest-tool/tags \
+    | grep 'name.*v[0-9]' \
+    | head -n 1 \
+    | cut -d '"' -f 4)
+
+echo "[***] Downloading ${TOOL_DOWNLOAD_URL}/${TOOL_LATEST_TAG}/manifest-tool-linux-amd64"
+curl -Lo manifest-tool ${TOOL_DOWNLOAD_URL}/${TOOL_LATEST_TAG}/manifest-tool-linux-amd64
+chmod +x manifest-tool
+
+## Check to see if we're building a different architecture
+case "$DOCKER_TAG" in
+    *amd64)
+        TARGET_ARCH="amd64"
+        ;;
+    *arm32v5)
+        TARGET_ARCH="arm/v5"
+        ;;
+    *arm32v6)
+        TARGET_ARCH="arm/v6"
+        ;;
+    *arm32v7)
+        TARGET_ARCH="arm/v7"
+        ;;
+    *arm64v8)
+        TARGET_ARCH="arm64/v8"
+        ;;
+    *i386)
+        TARGET_ARCH="386"
+        ;;
+    *)
+        echo "[---] Unknown target architecture, skipping manifest update"
+        exit 0
+        ;;
+esac
+
+# add_tag will add a tag and a manifest for each version
 function add_tag() {
     echo "[***] Adding tag ${1}"
     docker tag $IMAGE_NAME $DOCKER_REPO:$1
     docker push $DOCKER_REPO:$1
+
+    ./manifest-tool push from-args \
+        --platforms linux/"$TARGET_ARCH" \
+        --template "$IMAGE_NAME" \
+        --target "$DOCKER_REPO:${1}"
 }
 
+# The git repository should have tags as "v2.1.3", which updates docker tags "2.1.3", "2.1", "2".
 TAG=`git describe --tag --match "v*"`
 
-# Optional Kill Switch for only pushing 'latest', not any prior release versions
-# -- comment this out if you want to always update release tags on every push (not recommended)
-KILL=`echo ${TAG} | awk -F'-' '{print $3}'`
-if [ ! -z $KILL ]; then exit 0; fi
+# Optional Kill Switch for only pushing most recent tag, not any bugfix builds
+# -- uncomment this out if you want to always update release tags on every push
+# KILL=`echo ${TAG} | awk -F'-' '{print $3}'`
+# if [ ! -z $KILL ]; then exit 0; fi
 
 # Extract versions
 MAJOR=`echo ${TAG} | awk -F'-' '{print $1}' | awk -F'.' '{print $1}' | sed 's/v//'`
