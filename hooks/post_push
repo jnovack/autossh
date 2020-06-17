@@ -54,6 +54,7 @@ function add_tag() {
     docker tag $IMAGE_NAME $DOCKER_REPO:$1
     docker push $DOCKER_REPO:$1
 
+    echo "[---] Running ./manifest-tool push from-args --platforms linux/${TARGET_ARCH} --template '${IMAGE_NAME}' --target '${DOCKER_REPO}:${1}'"
     ./manifest-tool push from-args \
         --platforms linux/"$TARGET_ARCH" \
         --template "$IMAGE_NAME" \
