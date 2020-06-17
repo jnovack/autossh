@@ -40,6 +40,9 @@ do
         --build-arg VERSION=$(git describe --tags --always) \
         -t ${IMAGE_NAME}_${BUILD_ARCH} \
         .
+
+    docker push ${IMAGE_NAME}_${BUILD_ARCH}
+
 done
 
 
