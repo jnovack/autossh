@@ -1,4 +1,7 @@
 # Contributors
 
 * [@ccremer](https://github.com/ccremer)
-* Lukas Plevac <LukasPlevac@gmail.com>
+* [Christian Gahlert](https://github.com/chrisgahlert)
+* [Jan Piskvor Martinec](https://github.com/Piskvor)
+* [Lukas Plevac](https://github.com/Lukas0025)
+* [Shyam Sunder](https://github.com/sgsunder)

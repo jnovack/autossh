@@ -1,7 +1,7 @@
-FROM arm32v7/alpine:latest
+FROM arm64v8/alpine:latest
 
 # Copy downloaded architecture emulation static binary
-COPY qemu-arm-static /usr/bin/
+COPY qemu-aarch64-static /usr/bin/
 
 ARG BUILD_RFC3339
 ARG COMMIT

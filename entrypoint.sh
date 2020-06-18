@@ -12,7 +12,7 @@ cat "${SSH_KEY_FILE}" | ssh-add -k -
 # If known_hosts is provided, STRICT_HOST_KEY_CHECKING=yes
 # Default CheckHostIP=yes unless SSH_STRICT_HOST_IP_CHECK=false
 STRICT_HOSTS_KEY_CHECKING=no
-KNOWN_HOSTS=${SSH_KNOWN_HOSTS:=/known_hosts}
+KNOWN_HOSTS=${SSH_KNOWN_HOSTS_FILE:=/known_hosts}
 if [ -f "${KNOWN_HOSTS}" ]; then
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
     if [ "${SSH_STRICT_HOST_IP_CHECK}" = false ]; then
@@ -32,9 +32,10 @@ fi
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
 
-# Determine command line flags
-INFO_TUNNEL_SRC="${SSH_BIND_IP:=0.0.0.0}:${SSH_HOSTUSER:=root}@${SSH_HOSTNAME:=localhost}:${SSH_TUNNEL_REMOTE:=${DEFAULT_PORT}}"
-INFO_TUNNEL_DEST="${SSH_TUNNEL_HOST=localhost}:${SSH_TUNNEL_LOCAL:=22}"
+# Log to stdout
+echo "[INFO] Using $(autossh -V)"
+echo "[INFO] Tunneling ${SSH_BIND_IP:=0.0.0.0}:${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT:=${DEFAULT_PORT}} to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
+
 COMMAND="autossh "\
 "-M 0 "\
 "-N "\
@@ -43,21 +44,11 @@ COMMAND="autossh "\
 "-o ServerAliveCountMax=${SERVER_ALIVE_COUNT_MAX:-3} "\
 "-o ExitOnForwardFailure=yes "\
 "-t -t "\
-"${SSH_MODE:=-R} ${SSH_BIND_IP}:${SSH_TUNNEL_REMOTE}:${SSH_TUNNEL_HOST}:${SSH_TUNNEL_LOCAL} "\
+"${SSH_MODE:=-R} ${SSH_BIND_IP}:${SSH_REMOTE_PORT}:${SSH_TARGET_HOST}:${SSH_TARGET_PORT} "\
 "-p ${SSH_HOSTPORT:=22} "\
-"${SSH_HOSTUSER}@${SSH_HOSTNAME}"
+"${SSH_REMOTE_USER}@${SSH_REMOTE_HOST}"
 
-# Log to stdout
-echo "[INFO] Using $(autossh -V)"
-echo "[INFO] Tunneling ${INFO_TUNNEL_SRC} to ${INFO_TUNNEL_DEST}"
-echo "> ${COMMAND}"
+echo "[INFO] # ${COMMAND}"
 
 # Run command
-AUTOSSH_PIDFILE=/autossh.pid \
-AUTOSSH_POLL=30 \
-AUTOSSH_GATETIME=30 \
-AUTOSSH_FIRST_POLL=30 \
-AUTOSSH_LOGLEVEL=0 \
-AUTOSSH_LOGFILE=/dev/stdout \
-
 exec ${COMMAND}

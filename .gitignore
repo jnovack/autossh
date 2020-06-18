@@ -1,0 +1,3 @@
+config/
+manifest-tool*
+qemu-*-static
