@@ -200,14 +200,14 @@ Sets the threshold of alive messages after which the connection is terminated an
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
+#### SSH_BIND_IP
+
+If the remote endpoint has multiple IP addresses or networks, you can define which IP address autossh will use to bind. By default, autossh will bind on all interfaces and IP addresses (0.0.0.0).
+
 #### Additional Environment variables
 
 * [`autossh(1)`](https://linux.die.net/man/1/autossh)
 * [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
-
-#### SSH_BIND_IP
-
-If the remote endpoint has multiple IP addresses or networks, you can define which IP address autossh will use to bind. By default, autossh will bind on all interfaces and IP addresses (0.0.0.0).
 
 ## Examples
 
