@@ -1,8 +1,9 @@
 FROM alpine:latest
 
-ARG BUILD_RFC3339
-ARG COMMIT
-ARG VERSION
+ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
+ARG COMMIT="local"
+ARG VERSION="dirty"
+
 LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
       org.opencontainers.image.created=$BUILD_RFC3339 \
       org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
