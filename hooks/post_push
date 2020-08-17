@@ -31,7 +31,6 @@ function add_tag() {
         --platforms ${2} \
         --template ${IMAGE_NAME}_ARCHVARIANT \
         --target ${DOCKER_REPO}:${1}
-
 }
 
 
@@ -115,12 +114,13 @@ do
             ;;
     esac
 
+    # Append all the architectures together to build a valid platforms string.
     if [ ! -n "${DEMO}" ]; then
         MULTIARCH="${MULTIARCH},${ARCH_VARIANT}"
     fi
 done
 
-## Tag all the images
+## Tag all the images with the base tag.
 add_tag ${DOCKER_TAG} ${MULTIARCH}
 
 ## Tag all the releases
