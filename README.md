@@ -200,6 +200,10 @@ Sets the threshold of alive messages after which the connection is terminated an
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
+#### SSH_BIND_IP
+
+If the remote endpoint has multiple IP addresses or networks, you can define which IP address autossh will use to bind. By default, autossh will bind on all interfaces and IP addresses (0.0.0.0).
+
 #### Additional Environment variables
 
 * [`autossh(1)`](https://linux.die.net/man/1/autossh)
@@ -222,7 +226,8 @@ on the private LAN of the docker host.  `ssh`ing to fake internet address
 docker host, and onto the private lan where the connection will terminate
 `192.168.123.45:22`.
 
-    version: '3.7'
+```yaml
+version: '3.7'
 
     services:
       ssh-to-docker-host:
