@@ -1,4 +1,5 @@
 #!/usr/bin/dumb-init /bin/sh
+echo "${PACKAGE} ${VERSION} revision ${REVISION} built ${BUILD_RFC3339}"
 
 # Set up key file
 KEY_FILE=${SSH_KEY_FILE:=/id_rsa}
