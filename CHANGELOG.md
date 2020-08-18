@@ -4,11 +4,12 @@
 
 **Breaking Changes**
 - Renamed lots of confusing variables names to less confusing variable names
-    - `SSH_HOSTUSER` to `SSH_REMOTE_USER`
-    - `SSH_HOSTNAME` to `SSH_REMOTE_HOST`
-    - `SSH_TUNNEL_REMOTE` to `SSH_REMOTE_PORT`
     - `SSH_TUNNEL_HOST` to `SSH_TARGET_HOST`
     - `SSH_TUNNEL_LOCAL` to `SSH_TARGET_PORT`
+    - `SSH_TUNNEL_REMOTE` to `SSH_TUNNEL_PORT`
+    - `SSH_HOSTUSER` to `SSH_REMOTE_USER`
+    - `SSH_HOSTNAME` to `SSH_REMOTE_HOST`
+    - `SSH_HOSTPORT` to `SSH_REMOTE_PORT`
 - Docker Swarm compatibility
     - Renamed `SSH_KNOWN_HOSTS` to `SSH_KNOWN_HOSTS_FILE`
 
