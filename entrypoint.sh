@@ -17,8 +17,10 @@ if [ -f "${KNOWN_HOSTS}" ]; then
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
     if [ "${SSH_STRICT_HOST_IP_CHECK}" = false ]; then
         KNOWN_HOSTS_ARG="${KNOWN_HOSTS_ARG}-o CheckHostIP=no "
+        echo "[WARN] Not using STRICT_HOSTS_KEY_CHECKING"
     fi
     STRICT_HOSTS_KEY_CHECKING=yes
+    echo "[INFO] Using STRICT_HOSTS_KEY_CHECKING"
 fi
 
 # Add entry to /etc/passwd if we are running non-root
