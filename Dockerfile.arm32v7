@@ -3,8 +3,11 @@ FROM arm32v7/alpine:latest
 # Copy downloaded architecture emulation static binary
 COPY qemu-arm-static /usr/bin/
 
+ARG APPLICATION="myapp"
 ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
 ARG REVISION="local"
+ARG DESCRIPTION="no description"
+ARG PACKAGE="user/repo"
 ARG VERSION="dirty"
 
 LABEL org.opencontainers.image.ref.name="jnovack/autossh" \
@@ -32,6 +35,14 @@ ENV \
   AUTOSSH_FIRST_POLL=30 \
   AUTOSSH_LOGLEVEL=0 \
   AUTOSSH_LOGFILE=/dev/stdout
+
+ENV \
+  APPLICATION="myapp" \
+  BUILD_RFC3339="1970-01-01T00:00:00Z" \
+  REVISION="local" \
+  DESCRIPTION="no description" \
+  PACKAGE="user/repo" \
+  VERSION="dirty"
 
 COPY /entrypoint.sh /entrypoint.sh
 
