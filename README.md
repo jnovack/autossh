@@ -136,6 +136,10 @@ Specify the address (ip preferred) of the *remote* endpoint. (Default:
 
 #### SSH_REMOTE_PORT
 
+Specify the `ssh` port the *remote* endpoint to connect. (Default: `22`)
+
+#### SSH_TUNNEL_PORT
+
 Specify the port number on the *remote* endpoint which will serve as the
 tunnel entrance. (Default: random > 32768)  If you do not want a new port
 every time you restart **jnovack/autossh** you may wish to explicitly set
