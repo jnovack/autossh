@@ -119,7 +119,7 @@ Mount the key you generated within the **Setup** step, or set
 #### /known_hosts
 
 Mount the `known_hosts` file if you want to enable `StrictHostKeyChecking`,
-or set `SSH_KNOWN_HOSTS`.
+or set `SSH_KNOWN_HOSTS_FILE`.
 
     -v /path/to/known_hosts:/known_hosts
 
