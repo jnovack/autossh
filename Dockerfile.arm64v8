@@ -37,12 +37,12 @@ ENV \
   AUTOSSH_LOGFILE=/dev/stdout
 
 ENV \
-  APPLICATION="myapp" \
-  BUILD_RFC3339="1970-01-01T00:00:00Z" \
-  REVISION="local" \
-  DESCRIPTION="no description" \
-  PACKAGE="user/repo" \
-  VERSION="dirty"
+  APPLICATION="${APPLICATION}" \
+  BUILD_RFC3339="${BUILD_RFC3339}" \
+  REVISION="${REVISION}" \
+  DESCRIPTION="${DESCRIPTION}" \
+  PACKAGE="${PACKAGE}" \
+  VERSION="${VERSION}"
 
 COPY /entrypoint.sh /entrypoint.sh
 
