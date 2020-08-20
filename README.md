@@ -1,6 +1,6 @@
 # docker-autossh
 
-Highly customizable AutoSSH docker container
+Highly customizable AutoSSH docker container.
 
 ## Overview
 
@@ -175,8 +175,8 @@ Additional details are available from [`ssh_config(5)`](https://linux.die.net/ma
 
 #### Additional Environment variables
 
-* [`autossh(1)`](https://linux.die.net/man/1/autossh)
-* [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+- [`autossh(1)`](https://linux.die.net/man/1/autossh)
+- [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
 ## Examples
 
