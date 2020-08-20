@@ -1,9 +1,9 @@
 # docker-autossh
 
-[![](https://badgen.net/badge/jnovack/autossh/blue?icon=docker)](https://hub.docker.com/r/jnovack/autossh)
-[![](https://badgen.net/badge/jnovack/docker-autossh/purple?icon=github)](https://github.com/jnovack/docker-autossh)
+[![Docker](https://badgen.net/badge/jnovack/autossh/blue?icon=docker)](https://hub.docker.com/r/jnovack/autossh)
+[![Github](https://badgen.net/badge/jnovack/docker-autossh/purple?icon=github)](https://github.com/jnovack/docker-autossh)
 
-Highly customizable AutoSSH docker container
+Highly customizable AutoSSH docker container.
 
 ## Overview
 
@@ -44,8 +44,10 @@ Typically, the *target* can be on a Home LAN segment without a publicly
 addressible IP address; whereas the *remote* machine has an address that is
 reachable by both *target* and *source*. And *source* can only reach *remote*.
 
-    target ---> |firewall| >--- remote ---< |firewall| <--- source
-    10.1.1.101               203.0.113.10            192.168.1.101
+```text
+target ---> |firewall| >--- remote ---< |firewall| <--- source
+10.1.1.101               203.0.113.10            192.168.1.101
+```
 
 The *target* (running **autossh**) connects up to the *remote* server and
 keeps a tunnel alive so that *source* can proxy through *remote* and reach
@@ -62,10 +64,12 @@ Virtual Private Server (VPS) on the Internet that is accessible to all.  This
 will actually be to the *target* server on port 22. This is known as a "reverse
 tunnel".
 
-    local
-    172.17.0.1
-    target ---> |firewall| ---> remote <--- |firewall| <--- source
-    10.1.1.101               203.0.113.10            192.168.1.101
+```text
+local
+172.17.0.1
+target ---> |firewall| ---> remote <--- |firewall| <--- source
+10.1.1.101               203.0.113.10            192.168.1.101
+```
 
 #### Disclaimer
 
@@ -81,26 +85,28 @@ To start, you will need to generate an SSH key on the Docker host. This will
 ensure the key for the container is separate from your normal user key in the
 event there is ever a need to revoke one or the other.
 
-    $ ssh-keygen -t rsa -b 4096 -C "docker-autossh" -f autossh_id_rsa
-    Generating public/private rsa key pair.
-    Enter file in which to save the key (/home/jnovack/autossh_id_rsa):
-    Enter passphrase (empty for no passphrase):
-    Enter same passphrase again:
-    Your identification has been saved in /home/jnovack/autossh_id_rsa.
-    Your public key has been saved in /home/jnovack/autossh_id_rsa.pub.
-    The key fingerprint is:
-    00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff docker-autossh
-    The key's randomart image is:
-    +-----[ RSA 4096]-----+
-    |     _.-'''''-._     |
-    |   .'  _     _  '.   |
-    |  /   (_)   (_)   \  |
-    | |  ,           ,  | |
-    | |  \`.       .`/  | |
-    |  \  '.`'""'"`.'  /  |
-    |   '.  `'---'`  .'   |
-    |     '-._____.-'     |
-    +---------------------+
+```text
+$ ssh-keygen -t rsa -b 4096 -C "docker-autossh" -f autossh_id_rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/jnovack/autossh_id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/jnovack/autossh_id_rsa.
+Your public key has been saved in /home/jnovack/autossh_id_rsa.pub.
+The key fingerprint is:
+00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff docker-autossh
+The key's randomart image is:
++-----[ RSA 4096]-----+
+|     _.-'''''-._     |
+|   .'  _     _  '.   |
+|  /   (_)   (_)   \  |
+| |  ,           ,  | |
+| |  \`.       .`/  | |
+|  \  '.`'""'"`.'  /  |
+|   '.  `'---'`  .'   |
+|     '-._____.-'     |
++---------------------+
+```
 
 ## Command-line Options
 
@@ -114,14 +120,18 @@ list of environment variables that can be set.
 Mount the key you generated within the **Setup** step, or set
 `SSH_KEY_FILE`.
 
-    -v /path/to/id_rsa:/id_rsa
+```sh
+-v /path/to/id_rsa:/id_rsa
+```
 
 #### /known_hosts
 
 Mount the `known_hosts` file if you want to enable `StrictHostKeyChecking`,
 or set `SSH_KNOWN_HOSTS_FILE`.
 
-    -v /path/to/known_hosts:/known_hosts
+```sh
+-v /path/to/known_hosts:/known_hosts
+```
 
 ### Environment Variables
 
@@ -206,8 +216,8 @@ Additional details are available from [`ssh_config(5)`](https://linux.die.net/ma
 
 #### Additional Environment variables
 
-* [`autossh(1)`](https://linux.die.net/man/1/autossh)
-* [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+- [`autossh(1)`](https://linux.die.net/man/1/autossh)
+- [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
 ## Examples
 
@@ -226,40 +236,42 @@ on the private LAN of the docker host.  `ssh`ing to fake internet address
 docker host, and onto the private lan where the connection will terminate
 `192.168.123.45:22`.
 
-    version: '3.7'
+```yml
+version: '3.7'
 
-    services:
-      ssh-to-docker-host:
-        image: jnovack/autossh
-        container_name: autossh-ssh-to-docker-host
-        environment:
-          - SSH_REMOTE_USER=sshuser
-          - SSH_REMOTE_HOST=203.0.113.10
-          - SSH_REMOTE_PORT=2222
-          - SSH_TARGET_HOST=172.17.0.1
-          - SSH_TARGET_PORT=22
-        restart: always
-        volumes:
-         - /etc/autossh/id_rsa:/id_rsa
-        dns:
-         - 8.8.8.8
-         - 1.1.1.1
+services:
+  ssh-to-docker-host:
+    image: jnovack/autossh
+    container_name: autossh-ssh-to-docker-host
+    environment:
+      - SSH_REMOTE_USER=sshuser
+      - SSH_REMOTE_HOST=203.0.113.10
+      - SSH_REMOTE_PORT=2222
+      - SSH_TARGET_HOST=172.17.0.1
+      - SSH_TARGET_PORT=22
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
-      ssh-to-lan-endpoint:
-        image: jnovack/autossh
-        container_name: autossh-ssh-to-lan-endpoint
-        environment:
-          - SSH_REMOTE_USER=sshuser
-          - SSH_REMOTE_HOST=203.0.113.10
-          - SSH_REMOTE_PORT=22222
-          - SSH_TARGET_HOST=198.168.123.45
-          - SSH_TARGET_PORT=22
-        restart: always
-        volumes:
-          - /etc/autossh/id_rsa:/id_rsa
-        dns:
-          - 8.8.8.8
-          - 4.2.2.4
+  ssh-to-lan-endpoint:
+    image: jnovack/autossh
+    container_name: autossh-ssh-to-lan-endpoint
+    environment:
+      - SSH_REMOTE_USER=sshuser
+      - SSH_REMOTE_HOST=203.0.113.10
+      - SSH_REMOTE_PORT=22222
+      - SSH_TARGET_HOST=198.168.123.45
+      - SSH_TARGET_PORT=22
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 4.2.2.4
+```
 
 ## Tags
 
@@ -273,4 +285,6 @@ instances will download and run the 64-bit ARM version (`arm64v8`).
 You can also directly download a specific version by adding the architecture
 to the tag (e.g. `latest-arm32v7`).
 
-    docker pull jnovack/autossh:latest-arm32v7
+```sh
+docker pull jnovack/autossh:latest-arm32v7
+```
