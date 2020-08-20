@@ -4,7 +4,7 @@ source version.sh
 # Set up key file
 KEY_FILE=${SSH_KEY_FILE:=/id_rsa}
 if [ ! -f "${KEY_FILE}" ]; then
-    echo "[ERROR] No SSH Key file found"
+    echo "[FATAL] No SSH Key file found"
     exit 1
 fi
 eval $(ssh-agent -s)
@@ -18,16 +18,16 @@ if [ -f "${KNOWN_HOSTS}" ]; then
     KNOWN_HOSTS_ARG="-o UserKnownHostsFile=${KNOWN_HOSTS} "
     if [ "${SSH_STRICT_HOST_IP_CHECK}" = false ]; then
         KNOWN_HOSTS_ARG="${KNOWN_HOSTS_ARG}-o CheckHostIP=no "
-        echo "[WARN] Not using STRICT_HOSTS_KEY_CHECKING"
+        echo "[WARN ] Not using STRICT_HOSTS_KEY_CHECKING"
     fi
     STRICT_HOSTS_KEY_CHECKING=yes
-    echo "[INFO] Using STRICT_HOSTS_KEY_CHECKING"
+    echo "[INFO ] Using STRICT_HOSTS_KEY_CHECKING"
 fi
 
 # Add entry to /etc/passwd if we are running non-root
 if [[ $(id -u) != "0" ]]; then
   USER="autossh:x:$(id -u):$(id -g):autossh:/tmp:/bin/sh"
-  echo "Creating non-root-user = $USER"
+  echo "[INFO ] Creating non-root-user = $USER"
   echo "$USER" >> /etc/passwd
 fi
 
@@ -38,8 +38,8 @@ let "DEFAULT_PORT += 32768"
 # Determine command line flags
 
 # Log to stdout
-echo "[INFO] Using $(autossh -V)"
-echo "[INFO] Tunneling ${SSH_TUNNEL_PORT:=${DEFAULT_PORT}} on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT} to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
+echo "[INFO ] Using $(autossh -V)"
+echo "[INFO ] Tunneling ${SSH_TUNNEL_PORT:=${DEFAULT_PORT}} on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT} to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
 
 COMMAND="autossh "\
 "-M 0 "\
@@ -53,7 +53,7 @@ COMMAND="autossh "\
 "-p ${SSH_REMOTE_PORT:=22} "\
 "${SSH_REMOTE_USER}@${SSH_REMOTE_HOST}"
 
-echo "[INFO] # ${COMMAND}"
+echo "[INFO ] # ${COMMAND}"
 
 # Run command
 exec ${COMMAND}
