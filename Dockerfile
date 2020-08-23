@@ -30,5 +30,6 @@ ENV \
   AUTOSSH_LOGFILE=/dev/stdout
 
 COPY /entrypoint.sh /entrypoint.sh
+COPY /version.sh /version.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
