@@ -42,5 +42,6 @@ ENV \
   VERSION="${VERSION}"
 
 COPY /entrypoint.sh /entrypoint.sh
+COPY /version.sh /version.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
