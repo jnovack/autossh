@@ -29,7 +29,7 @@ Before we begin, I want to define some terms.
 - *target* - The endpoint and ultimate destination of the tunnel.
 
 - *remote* - The 'middle-man', or proxy server you are tunnelling through to
-get to your target.
+get to your *target*.
 
 - *source* - The initial endpoint you are starting from that does not have
 access to the *target* endpoint, but does have access to the *remote*
@@ -70,6 +70,22 @@ local
 target ---> |firewall| ---> remote <--- |firewall| <--- source
 10.1.1.101               203.0.113.10            192.168.1.101
 ```
+
+By default, SSH server applications (such as OpenSSH, Dropbear, etc), only
+permit connections to forwarded ports from the loopback interface
+(`127.0.0.1`).
+
+This means, you must be authenticated and connected the *remote* and use it as
+a "jump point" (for a lack of a better term) before proceeding to connect to
+the tunnel.
+
+In the example above, from the *source*, you first have to open an SSH
+connection to the *remote* (`203.0.113.10`), then you can continue to connect
+to the *target* (`10.1.1.101`).  It's a two-step process.
+
+To make this a one-step process (connecting from *source* to *target* via
+*remote*), you must make some security changes on the *remote* (not-advised).
+Please see the [#SSH_BIND_IP](#SSH_BIND_IP) section below.
 
 #### Disclaimer
 
@@ -193,6 +209,18 @@ Defines how the tunnel will be set up:
 
 - `-R` is default, remote forward mode.
 - `-L` means local forward mode.
+
+#### SSH_BIND_IP
+
+**WARNING**: _This process involves changing the security on the server
+and will expose your *target* to additional networks and potentially the
+Internet.  It is not recommended to do this procedure without taking
+additional precautions._
+
+You can define which IP address the tunnel will use to bind.
+
+Use of this option will NOT have an effect unless you properly configure the
+`GatewayPorts` variable in your **remote** server's configuration file.
 
 #### SERVER_ALIVE_INTERVAL
 

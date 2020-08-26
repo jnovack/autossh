@@ -31,6 +31,10 @@ if [[ $(id -u) != "0" ]]; then
   echo "$USER" >> /etc/passwd
 fi
 
+if [ ! -z "${SSH_BIND_IP}" ]; then
+    echo "[WARN ] SSH_BIND_IP requires additional server configuration to work properly"
+fi
+
 # Pick a random port above 32768
 DEFAULT_PORT=$RANDOM
 let "DEFAULT_PORT += 32768"
@@ -39,7 +43,9 @@ let "DEFAULT_PORT += 32768"
 
 # Log to stdout
 echo "[INFO ] Using $(autossh -V)"
-echo "[INFO ] Tunneling ${SSH_TUNNEL_PORT:=${DEFAULT_PORT}} on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT} to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
+echo "[INFO ] Tunneling ${SSH_BIND_IP:=127.0.0.1}:${SSH_TUNNEL_PORT:=${DEFAULT_PORT}}" \
+     " on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT}" \
+     " to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
 
 COMMAND="autossh "\
 "-M 0 "\
@@ -49,7 +55,7 @@ COMMAND="autossh "\
 "-o ServerAliveCountMax=${SERVER_ALIVE_COUNT_MAX:-3} "\
 "-o ExitOnForwardFailure=yes "\
 "-t -t "\
-"${SSH_MODE:=-R} ${SSH_TUNNEL_PORT}:${SSH_TARGET_HOST}:${SSH_TARGET_PORT} "\
+"${SSH_MODE:=-R} ${SSH_BIND_IP}:${SSH_TUNNEL_PORT}:${SSH_TARGET_HOST}:${SSH_TARGET_PORT} "\
 "-p ${SSH_REMOTE_PORT:=22} "\
 "${SSH_REMOTE_USER}@${SSH_REMOTE_HOST}"
 

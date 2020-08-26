@@ -19,7 +19,18 @@ DOCKER_BUILD_ARGS := \
 	--build-arg VERSION=${VERSION} \
 	--progress auto
 
-.PHONY: docker update-hooks
+.PHONY: debug-variables docker update-hooks
+
+.PHONY: debug-variables
+debug-variables:
+	@echo "APPLICATION: ${APPLICATION}"
+	@echo "BRANCH: ${BRANCH}"
+	@echo "BUILD_RFC3339: ${BUILD_RFC3339}"
+	@echo "DESCRIPTION: ${DESCRIPTION}"
+	@echo "PACKAGE: ${PACKAGE}"
+	@echo "REVISION: ${REVISION}"
+	@echo "VERSION: ${VERSION}"
+	@echo "WORKDIR: ${WORKDIR}"
 
 # docker removes and rebuilds the docker container for local development
 docker:
@@ -32,3 +43,4 @@ update-hooks:
 	curl -Lo hooks/post_checkout https://github.com/jnovack/docker-multi-arch-hooks/raw/master/hooks/post_checkout
 	curl -Lo hooks/post_push https://github.com/jnovack/docker-multi-arch-hooks/raw/master/hooks/post_push
 	curl -Lo variables.mk https://github.com/jnovack/docker-multi-arch-hooks/raw/master/variables.mk
+	curl -Lo go.mk https://github.com/jnovack/docker-multi-arch-hooks/raw/master/go.mk
