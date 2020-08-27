@@ -1,19 +1,8 @@
 version: '3'
 
-#      TARGET_PORT                  REMOTE_PORT    TUNNEL_PORT
-# target <--------------- local ------------> remote <--------------- source
-# 203.0.113.100       203.0.113.111        203.0.113.10        203.0.113.200
-#
-# The LOCAL (203.0.113.111) device connects to the REMOTE (203.0.113.10)
-# REMOTE_PORT (:22) to permit the SOURCE (203.0.113.200) to connect to the
-# REMOTE (203.0.113.10) TUNNEL_PORT (:11111) to get to the TARGET
-# (203.0.113.100) TARGET_PORT (:22) via the tunnel set up by
+# Please see docs/TESTING.md for additional information.
 
 services:
-
-# bootloader creates the keys, and stays alive for 300 seconds (should be
-#    enough time to test) before exiting. without this container, local and
-#    sut fight for a race condition
   bootloader:
     build:
       context: ./test
@@ -29,8 +18,27 @@ services:
     volumes:
       - sshkeys:/opt/
 
-# remote is the device we are connecting through, this must allow TCP
-#    forwarding to work.  GatewayPorts are necessary to permit SSH_BIND_IP
+  target:
+    build:
+      context: ./test
+      dockerfile: Dockerfile.openssh
+    depends_on:
+      - bootloader
+    hostname: target
+    command: /bin/sh -c "(
+              rm /root/.ssh/target.txt;
+              sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config;
+              echo root:root | chpasswd;
+              ssh-keygen -A;
+              touch /root/.ssh/target.txt;
+              /usr/sbin/sshd -D -e
+              )"
+    networks:
+      testnet:
+        ipv4_address: 203.0.113.100
+    volumes:
+      - sshkeys:/root/.ssh/
+
   remote:
     build:
       context: ./test
@@ -54,30 +62,7 @@ services:
     volumes:
       - sshkeys:/root/.ssh/
 
-# target is the device we are connecting to through the tunnel
-  target:
-    build:
-      context: ./test
-      dockerfile: Dockerfile.openssh
-    depends_on:
-      - bootloader
-    hostname: target
-    command: /bin/sh -c "(
-              rm /root/.ssh/target.txt;
-              sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config;
-              echo root:root | chpasswd;
-              ssh-keygen -A;
-              touch /root/.ssh/target.txt;
-              /usr/sbin/sshd -D -e
-             )"
-    networks:
-      testnet:
-        ipv4_address: 203.0.113.100
-    volumes:
-      - sshkeys:/root/.ssh/
 
-# local is the autossh container we are building, however, we (should) never
-#    exit, so we must use another container (sut) to actually perform testing
   local:
     build: .
     hostname: local
@@ -104,8 +89,6 @@ services:
     volumes:
       - sshkeys:/opt/
 
-
-# sut is our source device and all containers must be up prior to running
   sut:
     build:
       context: ./test
@@ -127,7 +110,6 @@ services:
     volumes:
       - sshkeys:/opt/
 
-
 networks:
   testnet:
     driver: bridge
@@ -135,7 +117,6 @@ networks:
       driver: default
       config:
         - subnet: 203.0.113.0/24
-
 
 volumes:
   sshkeys: {}
