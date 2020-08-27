@@ -1,7 +1,7 @@
 # docker-autossh
 
 [![Docker](https://badgen.net/badge/jnovack/autossh/blue?icon=docker)](https://hub.docker.com/r/jnovack/autossh)
-[![Github](https://badgen.net/badge/jnovack/docker-autossh/purple?icon=github)](https://github.com/jnovack/docker-autossh)
+[![Github](https://badgen.net/badge/jnovack/autossh/purple?icon=github)](https://github.com/jnovack/autossh)
 
 Highly customizable AutoSSH docker container.
 
@@ -108,7 +108,7 @@ ensure the key for the container is separate from your normal user key in the
 event there is ever a need to revoke one or the other.
 
 ```text
-$ ssh-keygen -t rsa -b 4096 -C "docker-autossh" -f autossh_id_rsa
+$ ssh-keygen -t rsa -b 4096 -C "autossh" -f autossh_id_rsa
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/jnovack/autossh_id_rsa):
 Enter passphrase (empty for no passphrase):
@@ -116,7 +116,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/jnovack/autossh_id_rsa.
 Your public key has been saved in /home/jnovack/autossh_id_rsa.pub.
 The key fingerprint is:
-00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff docker-autossh
+00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff autossh
 The key's randomart image is:
 +-----[ RSA 4096]-----+
 |     _.-'''''-._     |
