@@ -1,4 +1,4 @@
-# docker-autossh
+# autossh
 
 [![Docker](https://badgen.net/badge/jnovack/autossh/blue?icon=docker)](https://hub.docker.com/r/jnovack/autossh)
 [![Github](https://badgen.net/badge/jnovack/autossh/purple?icon=github)](https://github.com/jnovack/autossh)
