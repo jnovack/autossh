@@ -118,8 +118,8 @@ services:
               while [ ! -f /opt/authorized_keys ]; do echo 'waiting for authorized_keys...'; sleep 2; done;
               while [ ! -f /opt/remote.txt ]; do echo 'waiting for remote...'; sleep 2; done;
               while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
-              sleep 2;
-              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then exit 0; else echo 'hostname is not target'; exit 1; fi';
+              echo 'testing...'
+              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'; exit 1; fi';
              )"
     networks:
       testnet:
