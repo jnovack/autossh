@@ -57,7 +57,8 @@ resources on *target*.  Think of it as "long distance port-forwarding".
 
 You are running `docker` on *target*, your home computer.  (Note: Linux Docker
 hosts automatically create a `docker0` interface with `172.17.0.1` so the
-containers can route to the host and out to other networks.)  You have a
+containers can route to the host and out to other networks.  A container that
+starts up could have the IP address `172.17.0.2`, for our example.)  You have a
 Virtual Private Server (VPS) on the Internet that is accessible to all.  This
 *local* docker container will make a connection to the *remote* VPS and tunnel
 *remote* port 2222 to *target* port 22.  Any connection to *remote* port 2222
@@ -67,10 +68,10 @@ tunnel".
 ```text
       TARGET_PORT                  REMOTE_PORT    TUNNEL_PORT
  target <--------------- local ------------> remote <--------------- source
- 10.1.1.101           172.17.0.1          203.0.113.10        192.168.1.101
+ 10.1.1.101           172.17.0.2          203.0.113.10        192.168.1.101
 ```
 
-> The LOCAL (172.17.0.1) device connects to the REMOTE (203.0.113.10)
+> The LOCAL (172.17.0.2) device connects to the REMOTE (203.0.113.10)
 > REMOTE_PORT (:22) to create the tunnel on REMOTE (203.0.113.10) TUNNEL_PORT
 > (:11111).
 >
@@ -87,17 +88,18 @@ the tunnel.
 
 In the example above, from the *source*, you first have to open an SSH
 connection to the *remote* (`203.0.113.10`), then you can continue to connect
-to the *target* (`10.1.1.101`).  It's a two-step process.
+to the *target* (`10.1.1.101`) by connecting to `127.0.0.1:TUNNEL_PORT`.
+It is a two-step process.
 
 To make this a one-step process (connecting from *source* to *target* via
 *remote*), you must make some security changes on the *remote* (not-advised).
-Please see the [#SSH_BIND_IP](#SSH_BIND_IP) section below.
+Please see the [SSH_BIND_IP](#SSH_BIND_IP) section below.
 
 #### Disclaimer
 
-By tunneling the *target* port 22 to *remote* port 2222, you may be exposing
+By tunneling *remote* port 2222 to *target* port 22, you may be exposing
 a home server (and by extension, your home network) to the Internet at large,
-commonly known as "a bad thing".  Be sure to use appropriately use firewalls,
+commonly known as "a bad thing(TM)".  Be sure to use appropriately use firewalls,
 `fail2ban` scripts, non-root access, key-based authentication only, and other
 security measures as necessary.
 
@@ -135,31 +137,14 @@ The key's randomart image is:
 What would a docker container be without customization? I have an extensive
 list of environment variables that can be set.
 
-### Mounts
-
-#### /id_rsa
-
-Mount the key you generated within the **Setup** step, or set
-`SSH_KEY_FILE`.
-
-```sh
--v /path/to/id_rsa:/id_rsa
-```
-
-#### /known_hosts
-
-Mount the `known_hosts` file if you want to enable `StrictHostKeyChecking`,
-or set `SSH_KNOWN_HOSTS_FILE`.
-
-```sh
--v /path/to/known_hosts:/known_hosts
-```
-
 ### Environment Variables
 
 All the envrionment variables are prefaced with `SSH_` NOT because you are
 required to tunnel SSH, but for ease of grouping.  The only SSH connection
-that is required is from the LOCAL device to the REMOTE server.
+that is required is from the LOCAL device to the REMOTE server.  However, if
+you are interested in tunneling other protocols securely (e.g. mysql, redis,
+mongodb) across networks with certificates, you may wish to consider my other
+project [ambassador](https://hub.docker.com/r/jnovack/ambassador/).
 
 #### SSH_REMOTE_USER
 
@@ -196,6 +181,10 @@ tunnel exit, or destination service.  Typically this is `ssh` (port: 22),
 however, you can tunnel other services such as redis (port: 6379),
 elasticsearch (port: 9200) or good old http (port: 80) and https (port: 443).
 
+If you are interested in tunneling other protocols securely (e.g. mysql,
+redis, mongodb) across networks via certificates you may wish to consider
+my other project [ambassador](https://hub.docker.com/r/jnovack/ambassador/).
+
 #### SSH_STRICT_HOST_IP_CHECK
 
 Set to `false` if you want the IP addresses of hosts to **not** be checked if
@@ -227,10 +216,11 @@ and will expose your *target* to additional networks and potentially the
 Internet.  It is not recommended to do this procedure without taking
 additional precautions._
 
-You can define which IP address the tunnel will use to bind.
+You can define which IP address the tunnel will use to bind on *remote*.
 
 Use of this option will NOT have an effect unless you properly configure the
-`GatewayPorts` variable in your **remote** server's configuration file.
+`GatewayPorts` variable in your *remote* server's configuration file.  Please
+see your SSH server documentation for proper set up.
 
 #### SSH_SERVER_ALIVE_INTERVAL
 
@@ -257,7 +247,31 @@ Additional details are available from [`ssh_config(5)`](https://linux.die.net/ma
 - [`autossh(1)`](https://linux.die.net/man/1/autossh)
 - [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
-## Examples
+### Mounts
+
+Mounts are optional, for simple usage.  It is far superior to use
+[environment variables](#Environment_Variables) which can be stored in
+configuration files and transported (and backed up!) easily.
+
+#### /id_rsa
+
+Mount the key you generated within the **Setup** step, or set
+`SSH_KEY_FILE`.
+
+```sh
+-v /path/to/id_rsa:/id_rsa
+```
+
+#### /known_hosts
+
+Mount the `known_hosts` file if you want to enable `StrictHostKeyChecking`,
+or set `SSH_KNOWN_HOSTS_FILE`.
+
+```sh
+-v /path/to/known_hosts:/known_hosts
+```
+
+## Samples
 
 ### docker-compose.yml
 
@@ -266,7 +280,7 @@ container (aptly named `autossh-ssh-to-docker-host`) to the host running the
 docker container.
 
 To use, `ssh` to fake internet address `203.0.113.10:2222` and you will be
-forwarded to `172.17.0.1:22` (the host running the docker container).
+forwarded to `172.17.0.2:22` (the host running the docker container).
 
 In the lower example, `ssh-to-lan-endpoint`, a tunnel will be made to a host
 on the private LAN of the docker host.  `ssh`ing to fake internet address
@@ -285,7 +299,7 @@ services:
       - SSH_REMOTE_USER=sshuser
       - SSH_REMOTE_HOST=203.0.113.10
       - SSH_REMOTE_PORT=2222
-      - SSH_TARGET_HOST=172.17.0.1
+      - SSH_TARGET_HOST=172.17.0.2
       - SSH_TARGET_PORT=22
     restart: always
     volumes:
