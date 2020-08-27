@@ -157,6 +157,10 @@ or set `SSH_KNOWN_HOSTS_FILE`.
 
 ### Environment Variables
 
+All the envrionment variables are prefaced with `SSH_` NOT because you are
+required to tunnel SSH, but for ease of grouping.  The only SSH connection
+that is required is from the LOCAL device to the REMOTE server.
+
 #### SSH_REMOTE_USER
 
 Specify the usename on the *remote* endpoint.  (Default: `root`)
@@ -228,7 +232,7 @@ You can define which IP address the tunnel will use to bind.
 Use of this option will NOT have an effect unless you properly configure the
 `GatewayPorts` variable in your **remote** server's configuration file.
 
-#### SERVER_ALIVE_INTERVAL
+#### SSH_SERVER_ALIVE_INTERVAL
 
 Sets a timeout interval in seconds after which if no data has been
 received from the server, ssh(1) will send a message through the encrypted channel to
@@ -239,12 +243,12 @@ request a response from the server.
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
-#### SERVER_ALIVE_COUNT_MAX
+#### SSH_SERVER_ALIVE_COUNT_MAX
 
 Sets the threshold of alive messages after which the connection is terminated and reestablished.
 
 - `3` is the default for this image.
-- `SERVER_ALIVE_INTERVAL=0` turns this variable ineffective.
+- `SSH_SERVER_ALIVE_INTERVAL=0` makes this variable ineffective.
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 

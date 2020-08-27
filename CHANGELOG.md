@@ -13,6 +13,9 @@ A number of breaking changes were made which requried a version bump.
   - `SSH_HOSTUSER` to `SSH_REMOTE_USER`
   - `SSH_HOSTNAME` to `SSH_REMOTE_HOST`
   - `SSH_HOSTPORT` to `SSH_REMOTE_PORT`
+  - `SERVER_ALIVE_INTERVAL` to `SSH_SERVER_ALIVE_INTERVAL`
+  - `SERVER_ALIVE_COUNT_MAX` to `SSH_SERVER_ALIVE_COUNT_MAX`
+
 - Docker Swarm compatibility
   - Renamed `SSH_KNOWN_HOSTS` to `SSH_KNOWN_HOSTS_FILE`
 
