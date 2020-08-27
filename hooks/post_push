@@ -67,10 +67,10 @@ done
 ## The git repository MUST have tags as "v2.1.3", which updates docker tags "2.1.3", "2.1", "2".
 TAG=`git describe --tag --match "v*"`
 
-## Optional Kill Switch for only pushing most recent tag, not any bugfix builds
-## -- uncomment this out if you want to always update release tags on every push
-# KILL=`echo ${TAG} | awk -F'-' '{print $3}'`
-# if [ ! -z $KILL ]; then exit 0; fi
+## Optional Kill Switch for bugfix builds.
+## -- uncomment to NOT update MAJOR, MINOR, PATCH versions on PRE-RELEASE builds
+## -- comment to ALWAYS update all release tags on every push
+KILL=`echo ${TAG} | awk -F'-' '{print $3}'`
 
 
 ## Extract versions
@@ -131,13 +131,19 @@ add_tag ${DOCKER_TAG} ${MULTIARCH}
 num='^[0-9]+$'
 pre='^[0-9A-Za-z\.]+$'
 if [ ! -z $MAJOR ] && [[ $MAJOR =~ $num ]]; then
-    add_tag ${MAJOR} ${MULTIARCH}
+    if [ -z $KILL ]; then
+        add_tag ${MAJOR} ${MULTIARCH}
+    fi
 
     if [ ! -z $MINOR ] && [[ $MINOR =~ $num ]]; then
-        add_tag ${MAJOR}.${MINOR} ${MULTIARCH}
+        if [ -z $KILL ]; then
+            add_tag ${MAJOR}.${MINOR} ${MULTIARCH}
+        fi
 
         if [ ! -z $PATCH ] && [[ $PATCH =~ $num ]]; then
-            add_tag ${MAJOR}.${MINOR}.${PATCH} ${MULTIARCH}
+            if [ -z $KILL ]; then
+                add_tag ${MAJOR}.${MINOR}.${PATCH} ${MULTIARCH}
+            fi
 
             if [ ! -z $PRLS ] && [[ ! $PRLS =~ $num ]] && [[ $PRLS =~ $pre ]]; then
                 add_tag ${MAJOR}.${MINOR}.${PATCH}-${PRLS} ${MULTIARCH}
