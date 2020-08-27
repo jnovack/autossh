@@ -40,6 +40,8 @@ for FILE in ${DOCKERFILE_PATH}.*
 do
     TARGET_ARCH=$(echo "${FILE}" | cut -d '.' -f 2)
 
+    echo "[---] TARGET_ARCH: ${TARGET_ARCH}"
+
     ## FUDGE Factor because Docker Hub does not respect "32"
     case "$TARGET_ARCH" in
         *arm32v5)
@@ -55,6 +57,8 @@ do
             BUILD_ARCH="${TARGET_ARCH}"
             ;;
     esac
+
+    echo "[---] BUILD_ARCH: ${BUILD_ARCH}"
 
     docker push ${IMAGE_NAME}_${BUILD_ARCH}
 done
