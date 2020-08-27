@@ -5,4 +5,5 @@ RUN \
     apk --no-cache add \
     openssh \
     openssh-keygen \
-    openssh-client
+    openssh-client \
+    dumb-init

@@ -19,7 +19,7 @@ services:
       context: ./test
       dockerfile: Dockerfile.openssh
     hostname: bootloader
-    command: /bin/sh -c "(
+    command: /usr/bin/dumb-init /bin/sh -c "(
               echo y | ssh-keygen -C testing -f /opt/id_rsa -N '';
               cp /opt/id_rsa.pub /opt/authorized_keys;
               chmod 600 /opt/authorized_keys;
