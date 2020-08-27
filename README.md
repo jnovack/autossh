@@ -65,17 +65,17 @@ will actually be to the *target* server on port 22. This is known as a "reverse
 tunnel".
 
 ```text
-target
-10.1.1.101
-   ^
-   |
-local ---> |firewall| ---> remote <--- |firewall| <--- source
-172.17.0.1               203.0.113.10            192.168.1.101
+      TARGET_PORT                  REMOTE_PORT    TUNNEL_PORT
+ target <--------------- local ------------> remote <--------------- source
+ 10.1.1.101           172.17.0.1          203.0.113.10        192.168.1.101
 ```
 
-> The SOURCE (192.168.1.101) connects to the SSH_TUNNEL_PORT on the
-> REMOTE (203.0.113.10) to get to the TARGET (10.1.1.101) SSH_TARGET_PORT
-> (:22) via the tunnel set up by LOCAL (172.17.0.1).
+> The LOCAL (172.17.0.1) device connects to the REMOTE (203.0.113.10)
+> REMOTE_PORT (:22) to create the tunnel on REMOTE (203.0.113.10) TUNNEL_PORT
+> (:11111).
+>
+> The SOURCE (192.168.1.101) connects to the REMOTE (203.0.113.10) TUNNEL_PORT
+> (:11111) to get to the TARGET (10.1.1.101) TARGET_PORT (:22).
 
 By default, SSH server applications (such as OpenSSH, Dropbear, etc), only
 permit connections to forwarded ports from the loopback interface
