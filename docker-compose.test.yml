@@ -76,8 +76,8 @@ services:
     volumes:
       - sshkeys:/root/.ssh/
 
-# local is the autossh container we are testing, however, we never exit, so
-#    we must use another container (sut) to actually perform the tests.
+# local is the autossh container we are building, however, we (should) never
+#    exit, so we must use another container (sut) to actually perform testing
   local:
     build: .
     hostname: local
