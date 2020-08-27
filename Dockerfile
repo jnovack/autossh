@@ -21,7 +21,6 @@ LABEL org.opencontainers.image.ref.name="${PACKAGE}" \
 RUN \
   apk --no-cache add \
     autossh \
-    net-tools \
     dumb-init && \
   chmod g+w /etc/passwd
 
