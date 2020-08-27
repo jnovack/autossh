@@ -10,11 +10,34 @@ version: '3'
 # (203.0.113.100) TARGET_PORT (:22) via the tunnel set up by
 
 services:
+
+# bootloader creates the keys, and stays alive for 300 seconds (should be
+#    enough time to test) before exiting. without this container, local and
+#    sut fight for a race condition
+  bootloader:
+    build:
+      context: ./test
+      dockerfile: Dockerfile.openssh
+    hostname: bootloader
+    command: /bin/sh -c "(
+              echo y | ssh-keygen -C testing -f /opt/id_rsa -N '';
+              cp /opt/id_rsa.pub /opt/authorized_keys;
+              chmod 600 /opt/authorized_keys;
+              sleep 300;
+              exit 1;
+            )"
+    volumes:
+      - sshkeys:/opt/
+
+# remote is the device we are connecting through, this must allow TCP
+#    forwarding to work.  GatewayPorts are necessary to permit SSH_BIND_IP
   remote:
     build:
       context: ./test
       dockerfile: Dockerfile.openssh
     hostname: remote
+    depends_on:
+      - bootloader
     command: /bin/sh -c "(
               rm /root/.ssh/remote.txt;
               sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config;
@@ -31,11 +54,13 @@ services:
     volumes:
       - sshkeys:/root/.ssh/
 
-
+# target is the device we are connecting to through the tunnel
   target:
     build:
       context: ./test
       dockerfile: Dockerfile.openssh
+    depends_on:
+      - bootloader
     hostname: target
     command: /bin/sh -c "(
               rm /root/.ssh/target.txt;
@@ -51,12 +76,15 @@ services:
     volumes:
       - sshkeys:/root/.ssh/
 
-
+# local is the autossh container we are testing, however, we never exit, so
+#    we must use another container (sut) to actually perform the tests.
   local:
     build: .
     hostname: local
     depends_on:
-      - sut
+      - bootloader
+      - remote
+      - target
     environment:
       - TERM=xterm
       - SSH_BIND_IP=203.0.113.10
@@ -77,18 +105,17 @@ services:
       - sshkeys:/opt/
 
 
+# sut is our source device and all containers must be up prior to running
   sut:
     build:
       context: ./test
       dockerfile: Dockerfile.openssh
     hostname: source
     depends_on:
-      - remote
-      - target
+      - local
     command: /bin/sh -c "(
-              echo y | ssh-keygen -C testing -f /opt/id_rsa -N '';
-              cp /opt/id_rsa.pub /opt/authorized_keys;
-              chmod 600 /opt/authorized_keys;
+              while [ ! -f /opt/id_rsa ]; do echo 'waiting for ssh-keygen...'; sleep 2; done;
+              while [ ! -f /opt/authorized_keys ]; do echo 'waiting for authorized_keys...'; sleep 2; done;
               while [ ! -f /opt/remote.txt ]; do echo 'waiting for remote...'; sleep 2; done;
               while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
               sleep 2;
