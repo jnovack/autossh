@@ -328,17 +328,18 @@ services:
 ## Multi-Arch Images
 
 Docker pulls the correct image for the current architecture, so Raspberry Pis
-will download and run the 32-bit ARMv7 version (`arm32v7`), Raspberry Pi Zeros
-will download and run the 32-bit ARMv6 version (`arm32v6`) and EC2 A1
-instances will download and run the 64-bit ARM version (`arm64v8`).
+will download and run the 32-bit ARMv7 version (`armv7`), Raspberry Pi Zeros
+will download and run the 32-bit ARMv6 version (`armv6`) and EC2 A1 instances
+will download and run the 64-bit ARM version (`arm64v8`).
 
-- `arm32v6`
-- `arm32v7`
+- `amd64`
+- `armv6`
+- `armv7`
 - `arm64v8`
 
-You can pull a specific architecture by specifying `:[version]-[arch]` as the
+You can pull a specific architecture by specifying `:[version]_[arch]` as the
 tag.
 
 ```sh
-docker pull jnovack/autossh:latest-arm32v7
+docker pull jnovack/autossh:latest_arm32v7
 ```
