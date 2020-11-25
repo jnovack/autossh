@@ -1,4 +1,7 @@
-FROM alpine:latest
+FROM arm64v8/alpine:latest
+
+# Copy downloaded architecture emulation static binary
+COPY qemu-aarch64-static /usr/bin/
 
 ARG APPLICATION="myapp"
 ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
