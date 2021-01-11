@@ -166,9 +166,7 @@ tunnel entrance. (Default: random > 32768)  If you do not want a new port
 every time you restart **jnovack/autossh** you may wish to explicitly set
 this.
 
-This option reverses if you set `SSH_MODE` (see below).  To bind a local
-forward tunnel to all interfaces, use an asterisk then the port desigation
-(e.g. `*:2222`).
+This option reverses if you set `SSH_MODE` (see below).
 
 #### SSH_TARGET_HOST
 
@@ -211,16 +209,25 @@ Defines how the tunnel will be set up:
 
 #### SSH_BIND_IP
 
+You can define which IP address the tunnel will use to bind on *remote* 
+(SSH_MODE of `-R`) or *local* (SSH_MODE of `-L`). The default
+is `127.0.0.1` only.
+
+##### SSH_MODE of `-R` (default)
+
 **WARNING**: _This process involves changing the security on the server
 and will expose your *target* to additional networks and potentially the
 Internet.  It is not recommended to do this procedure without taking
 additional precautions._
 
-You can define which IP address the tunnel will use to bind on *remote*.
-
 Use of this option will NOT have an effect unless you properly configure the
 `GatewayPorts` variable in your *remote* server's configuration file.  Please
 see your SSH server documentation for proper set up.
+
+##### SSH_MODE of `-L`
+
+You may want to set this to `0.0.0.0` in order to bind your `SSH_TUNNEL_PORT` 
+to all interfaces on *local* side.
 
 #### SSH_SERVER_ALIVE_INTERVAL
 
@@ -282,11 +289,15 @@ docker container.
 To use, `ssh` to fake internet address `203.0.113.10:2222` and you will be
 forwarded to `172.17.0.2:22` (the host running the docker container).
 
-In the lower example, `ssh-to-lan-endpoint`, a tunnel will be made to a host
+In the second example, `ssh-to-lan-endpoint`, a tunnel will be made to a host
 on the private LAN of the docker host.  `ssh`ing to fake internet address
 `203.0.113.10:22222` will traverse through the docker container through the
 docker host, and onto the private lan where the connection will terminate
 `192.168.123.45:22`.
+
+Finally, in the third example, `ssh-local-forward-on-1234`, a local forward to
+`198.168.123.45:22` will be created on the container, mapped to port `1234`.
+The tunnel will be created via `203.0.113.10:22222`.
 
 ```yml
 version: '3.7'
@@ -323,6 +334,26 @@ services:
     dns:
       - 8.8.8.8
       - 4.2.2.4
+  
+  ssh-local-forward-on-1234:
+    image: jnovack/autossh
+    container_name: autossh-ssh-local-forward
+    environment:
+      - SSH_REMOTE_USER=sshuser
+      - SSH_REMOTE_HOST=203.0.113.10
+      - SSH_REMOTE_PORT=22222
+      - SSH_BIND_IP=0.0.0.0
+      - SSH_TUNNEL_PORT=1234
+      - SSH_TARGET_HOST=198.168.123.45
+      - SSH_TARGET_PORT=22
+      - SSH_MODE=-L
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 4.2.2.4
+    
 ```
 
 ## Multi-Arch Images
