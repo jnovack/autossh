@@ -32,7 +32,7 @@ if [[ $(id -u) != "0" ]]; then
 fi
 
 if [ ! -z "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
-    echo "[WARN ] SSH_BIND_IP requires additional server configuration to work properly"
+    echo "[WARN ] SSH_BIND_IP requires GatewayPorts configured on the server to work properly"
 fi
 
 # Pick a random port above 32768
