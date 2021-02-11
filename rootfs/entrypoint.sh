@@ -31,7 +31,7 @@ if [[ $(id -u) != "0" ]]; then
   echo "$USER" >> /etc/passwd
 fi
 
-if [ ! -z "${SSH_BIND_IP}" ]; then
+if [ ! -z "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
     echo "[WARN ] SSH_BIND_IP requires additional server configuration to work properly"
 fi
 
