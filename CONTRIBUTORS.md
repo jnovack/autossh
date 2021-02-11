@@ -5,6 +5,7 @@
 - [Jan Piskvor Martinec](https://github.com/Piskvor)
 - [Lukas Plevac](https://github.com/Lukas0025)
 - [Shyam Sunder](https://github.com/sgsunder)
+- [Elliott Balsley](https://github.com/llamafilm)
 
 ## Special Thanks
 
