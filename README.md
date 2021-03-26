@@ -190,10 +190,18 @@ the `known_hosts` file is provided.  This can help avoid issues for hosts with
 dynamic IP addresses, but removes some additional protection against DNS
 spoofing attacks.  Host IP Checking is enabled by default.
 
+#### SSH_KEY
+
+You can specify the SSH key using Environnement variable.
+
+If both SSH_KEY and  SSH_KEY_FILE are passed, SSH_KEY_FILE is used and SSH_KEY is ignored.
+
 #### SSH_KEY_FILE
 
 In the event you wish to store the key in Docker Secrets, you may wish to
 set this to `/run/secrets/*secret-name*`
+
+If both SSH_KEY and  SSH_KEY_FILE are passed, SSH_KEY_FILE is used and SSH_KEY is ignored.
 
 #### SSH_KNOWN_HOSTS_FILE
 

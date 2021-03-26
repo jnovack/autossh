@@ -89,6 +89,32 @@ services:
     volumes:
       - sshkeys:/opt/
 
+  local-with-env:
+    build: .
+    hostname: local
+    depends_on:
+      - bootloader
+      - remote
+      - target
+    environment:
+      - TERM=xterm
+      - SSH_BIND_IP=203.0.113.10
+      - SSH_REMOTE_USER=root
+      - SSH_REMOTE_HOST=203.0.113.10
+      - SSH_REMOTE_PORT=22
+      - SSH_TARGET_HOST=203.0.113.100
+      - SSH_TARGET_PORT=22
+      - SSH_TUNNEL_PORT=11112
+      - SSH_KNOWN_HOSTS_FILE=/dev/null
+      - SSH_STRICT_HOST_IP_CHECK=false
+    networks:
+      testnet:
+        ipv4_address: 203.0.113.112
+    restart: always
+    volumes:
+      - sshkeys:/opt/
+    entrypoint:  ["sh", "-c",  "SSH_KEY=`cat /opt/id_rsa` /entrypoint.sh"]
+
   sut:
     build:
       context: ./test
@@ -96,14 +122,20 @@ services:
     hostname: source
     depends_on:
       - local
+      - local-with-env
     command: /bin/sh -c "(
               while [ ! -f /opt/id_rsa ]; do echo 'waiting for ssh-keygen...'; sleep 2; done;
               while [ ! -f /opt/authorized_keys ]; do echo 'waiting for authorized_keys...'; sleep 2; done;
               while [ ! -f /opt/remote.txt ]; do echo 'waiting for remote...'; sleep 2; done;
               while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
-              echo 'testing...'
-              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'; exit 1; fi';
-             )"
+              echo 'testing with key file';
+              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == 'target' ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'  `hostname`; exit 1; fi';
+              STATUS1=$$?;
+              echo 'testing with environment variable';
+              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11112 -C 'if [ `hostname` == 'target' ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] using env var, hostname is not target' `hostname`; exit 1; fi';
+              STATUS2=$$?;
+              if [ $${STATUS1} = '0' -a $${STATUS2} = '0' ]; then exit 0 ; else exit 1 ; fi
+              )"
     networks:
       testnet:
         ipv4_address: 203.0.113.200
