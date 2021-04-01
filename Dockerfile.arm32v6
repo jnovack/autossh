@@ -1,4 +1,4 @@
-FROM arm32v6/alpine:latest
+FROM arm32v6/alpine:3.12
 
 # Copy downloaded architecture emulation static binary
 COPY qemu-arm-static /usr/bin/
@@ -23,8 +23,8 @@ LABEL org.opencontainers.image.ref.name="${PACKAGE}" \
 
 RUN \
   apk --no-cache add \
-    autossh \
-    dumb-init && \
+  autossh \
+  dumb-init && \
   chmod g+w /etc/passwd
 
 ENV \
