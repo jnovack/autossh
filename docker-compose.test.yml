@@ -79,6 +79,7 @@ services:
       - SSH_TARGET_HOST=203.0.113.100
       - SSH_TARGET_PORT=22
       - SSH_TUNNEL_PORT=11111
+      - SSH_OPTIONS="-o StreamLocalBindUnlink=yes -o UseRoaming=no"
       - SSH_KEY_FILE=/opt/id_rsa
       - SSH_KNOWN_HOSTS_FILE=/dev/null
       - SSH_STRICT_HOST_IP_CHECK=false
