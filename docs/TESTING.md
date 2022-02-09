@@ -35,6 +35,10 @@ Just a reminder, here is a text-based overview of a complete end-to-end setup.
 > The SOURCE (203.0.113.200) connects to the REMOTE (203.0.113.10) device
 > TUNNEL_PORT (:11111) to get to the TARGET (203.0.113.100) TARGET_PORT (:22).
 
+There is a similar setup for local-with-env which is living on 203.0.113.112
+and setting up a tunnel on REMOTE (203.0.113.10) on port :11112. This setup
+just passing the SSH key using an environment variable instead of a file.
+
 ### 203.0.113.0/24
 
 Do not be alarmed, the address space `203.0.113.0/24` is not actually on the
@@ -203,6 +207,10 @@ branding variables.  This is as close to production as we can get.
 Since this container never exists, and we need Docker Hub to test the exit code,
 we must use another container (`sut`) to actually perform testing. This service
 gets setup as if it was in production with one minor difference.
+
+### local-with-env
+
+Same as local, but we pass the ssh key as an environment variable.
 
 #### SSH_KNOWN_HOSTS_FILE and SSH_STRICT_HOST_IP_CHECK
 

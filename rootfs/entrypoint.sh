@@ -1,14 +1,18 @@
 #!/usr/bin/dumb-init /bin/sh
 source version.sh
-
-# Set up key file
-KEY_FILE=${SSH_KEY_FILE:=/id_rsa}
-if [ ! -f "${KEY_FILE}" ]; then
-    echo "[FATAL] No SSH Key file found"
-    exit 1
-fi
 eval $(ssh-agent -s)
-cat "${SSH_KEY_FILE}" | ssh-add -k -
+if [ -n "${SSH_KEY_FILE}" ]; then
+    # Set up key file
+    if [ ! -f "${SSH_KEY_FILE}" ]; then
+        echo "[FATAL] No SSH Key file found"
+        exit 1
+    fi
+    cat "${SSH_KEY_FILE}" | ssh-add -k -
+else
+    if [ -n "${SSH_KEY}" ]; then
+        echo "${SSH_KEY}" | ssh-add -k -
+    fi
+fi
 
 # If known_hosts is provided, STRICT_HOST_KEY_CHECKING=yes
 # Default CheckHostIP=yes unless SSH_STRICT_HOST_IP_CHECK=false
