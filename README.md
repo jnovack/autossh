@@ -249,6 +249,16 @@ Sets the threshold of alive messages after which the connection is terminated an
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
+#### SSH_OPTIONS 
+
+Sets additional parameters to `ssh` connection. Supports more than one parameter. 
+
+Examples:
+ - SSH_OPTIONS="-o StreamLocalBindUnlink=yes" for recreate socket if it exists
+ - SSH_OPTIONS="-o StreamLocalBindUnlink=yes -o UseRoaming=no" for multiple parameters
+
+Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
+
 #### Additional Environment variables
 
 - [`autossh(1)`](https://linux.die.net/man/1/autossh)
