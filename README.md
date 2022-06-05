@@ -206,6 +206,7 @@ Defines how the tunnel will be set up:
 
 - `-R` is default, remote forward mode.
 - `-L` means local forward mode.
+- `-D` local dynamic application-level port forwarding.
 
 #### SSH_BIND_IP
 
@@ -227,6 +228,11 @@ see your SSH server documentation for proper set up.
 ##### SSH_MODE of `-L`
 
 You may want to set this to `0.0.0.0` in order to bind your `SSH_TUNNEL_PORT` 
+to all interfaces on *local* side.
+
+##### SSH_MODE of `-D`
+
+You may want to set this to `0.0.0.0` in order to bind your `SSH_BIND_IP` 
 to all interfaces on *local* side.
 
 #### SSH_SERVER_ALIVE_INTERVAL
@@ -357,6 +363,23 @@ services:
       - SSH_TARGET_HOST=198.168.123.45
       - SSH_TARGET_PORT=22
       - SSH_MODE=-L
+    restart: always
+    volumes:
+      - /etc/autossh/id_rsa:/id_rsa
+    dns:
+      - 8.8.8.8
+      - 4.2.2.4
+  
+  ssh-local-dynamic-application-level-forward:
+    image: jnovack/autossh
+    container_name: autossh-ssh-local-scoks
+    environment:
+      - SSH_REMOTE_USER=sshuser
+      - SSH_REMOTE_HOST=203.0.113.10
+      - SSH_REMOTE_PORT=22222
+      - SSH_BIND_IP=0.0.0.0
+      - SSH_TUNNEL_PORT=1080
+      - SSH_MODE=-D
     restart: always
     volumes:
       - /etc/autossh/id_rsa:/id_rsa
