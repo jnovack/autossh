@@ -34,9 +34,7 @@ fi
 if [ ! -z "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
     echo "[WARN ] SSH_BIND_IP requires GatewayPorts configured on the server to work properly"
 fi
-if [ "${SSH_MODE}" = "-D" ]; then
-    SSH_TARGET=${SSH_TARGET_HOST}${SSH_TARGET_PORT:+:}${SSH_TARGET_PORT}
-else
+if [ "${SSH_MODE}" != "-D" ]; then
     SSH_TARGET=${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}
 fi
 
