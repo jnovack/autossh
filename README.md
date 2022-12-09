@@ -259,6 +259,21 @@ Examples:
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
+#### SSH_POST_SCRIPT
+
+When set, SSH_POST_SCRIPT will be the location of a shell script to execute after starting autossh.
+This is useful to send some details to the server about the autossh client.
+For example, if a random port is used, then it's useful for the server to know who is on this port.
+SSH_TUNNEL_PORT can be used in the post script like so:
+```
+FILE=/tmp/autossh.${SSH_CLIENT_ID}
+echo "${SSH_TUNNEL_PORT}" > ${FILE}
+scp ${FILE} ${SSH_REMOTE_USER}@${SSH_REMOTE_HOST}:/tmp
+```
+In this example SSH_CLIENT_ID is set to some identifier that represents the client and the port is 
+set in a file. This could be useful when you have multiple client connections and you need to know 
+on the server which client to connect to. Mount the shell script in a docker volume.
+
 #### Additional Environment variables
 
 - [`autossh(1)`](https://linux.die.net/man/1/autossh)

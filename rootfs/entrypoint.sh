@@ -62,5 +62,22 @@ COMMAND="autossh "\
 
 echo "[INFO ] # ${COMMAND}"
 
-# Run command
-exec ${COMMAND}
+# Run autossh command in background and save pid
+exec ${COMMAND} &
+pid=$!
+sleep 1
+
+# Export the Tunnel Port for post script to use
+export SSH_TUNNEL_PORT=${SSH_TUNNEL_PORT}
+
+if [[ -e /proc/$pid ]] && [[ -n "${SSH_POST_SCRIPT}" ]]; then
+  if [[ -f "${SSH_POST_SCRIPT}" ]]; then
+    # Execute Post Script
+    echo "[INFO ] Executing ${SSH_POST_SCRIPT}"
+    /bin/sh "${SSH_POST_SCRIPT}"
+  else
+    echo "[WARN ] ${SSH_POST_SCRIPT} was not found"
+  fi
+fi
+
+wait $pid
