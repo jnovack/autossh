@@ -9,16 +9,16 @@ test:
 	echo $(PACKAGE)
 
 docker-nuke:
-	docker-compose -f docker-compose.test.yml down --rmi all --remove-orphans -v
+	docker-compose -f test/docker-compose.test.yml down --rmi all --remove-orphans -v
 
 docker-clean:
-	docker-compose -f docker-compose.test.yml down --remove-orphans -v
+	docker-compose -f test/docker-compose.test.yml down --remove-orphans -v
 
 docker-down:
-	docker-compose -f docker-compose.test.yml down
+	docker-compose -f test/docker-compose.test.yml down
 
 docker-up:
-	docker-compose -f docker-compose.test.yml up
+	docker-compose -f test/docker-compose.test.yml up
 
-docker-test:
-	docker-compose -f docker-compose.test.yml up --exit-code-from sut
+docker-test: docker-nuke
+	docker-compose -f test/docker-compose.test.yml up --exit-code-from sut

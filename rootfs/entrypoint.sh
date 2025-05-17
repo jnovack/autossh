@@ -7,8 +7,8 @@ if [ ! -f "${KEY_FILE}" ]; then
     echo "[FATAL] No SSH Key file found"
     exit 1
 fi
-eval $(ssh-agent -s)
-cat "${SSH_KEY_FILE}" | ssh-add -k -
+eval "$(ssh-agent -s)"
+ssh-add -k - <"${SSH_KEY_FILE}"
 
 # If known_hosts is provided, STRICT_HOST_KEY_CHECKING=yes
 # Default CheckHostIP=yes unless SSH_STRICT_HOST_IP_CHECK=false
@@ -26,26 +26,25 @@ fi
 
 # Add entry to /etc/passwd if we are running non-root
 if [[ $(id -u) != "0" ]]; then
-  USER="autossh:x:$(id -u):$(id -g):autossh:/tmp:/bin/sh"
-  echo "[INFO ] Creating non-root-user = $USER"
-  echo "$USER" >> /etc/passwd
+    USER="autossh:x:$(id -u):$(id -g):autossh:/tmp:/bin/sh"
+    echo "[INFO ] Creating non-root-user = $USER"
+    echo "$USER" >>/etc/passwd
 fi
 
-if [ ! -z "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
+if [ -n "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
     echo "[WARN ] SSH_BIND_IP requires GatewayPorts configured on the server to work properly"
 fi
 
 # Pick a random port above 32768
-DEFAULT_PORT=$RANDOM
-let "DEFAULT_PORT += 32768"
+DEFAULT_PORT=$(($RANDOM % 10 + 32768))
 
 # Determine command line flags
 
 # Log to stdout
 echo "[INFO ] Using $(autossh -V)"
 echo "[INFO ] Tunneling ${SSH_BIND_IP:=127.0.0.1}:${SSH_TUNNEL_PORT:=${DEFAULT_PORT}}" \
-     " on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT}" \
-     " to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
+    " on ${SSH_REMOTE_USER:=root}@${SSH_REMOTE_HOST:=localhost}:${SSH_REMOTE_PORT}" \
+    " to ${SSH_TARGET_HOST=localhost}:${SSH_TARGET_PORT:=22}"
 
 COMMAND="autossh \
      -M 0 \
