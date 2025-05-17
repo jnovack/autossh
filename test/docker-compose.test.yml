@@ -1,11 +1,9 @@
-version: '3'
-
 # Please see docs/TESTING.md for additional information.
 
 services:
   bootloader:
     build:
-      context: ./test
+      context: .
       dockerfile: Dockerfile.openssh
     hostname: bootloader
     command: /usr/bin/dumb-init /bin/sh -c "(
@@ -20,7 +18,7 @@ services:
 
   target:
     build:
-      context: ./test
+      context: .
       dockerfile: Dockerfile.openssh
     depends_on:
       - bootloader
@@ -41,7 +39,7 @@ services:
 
   remote:
     build:
-      context: ./test
+      context: .
       dockerfile: Dockerfile.openssh
     hostname: remote
     depends_on:
@@ -64,7 +62,9 @@ services:
 
 
   local:
-    build: .
+    build:
+      context: ../
+      dockerfile: build/package/Dockerfile
     hostname: local
     depends_on:
       - bootloader
@@ -92,7 +92,7 @@ services:
 
   sut:
     build:
-      context: ./test
+      context: .
       dockerfile: Dockerfile.openssh
     hostname: source
     depends_on:

@@ -20,8 +20,8 @@ LABEL org.opencontainers.image.ref.name="${PACKAGE}" \
 
 RUN \
   apk --no-cache add \
-    autossh \
-    dumb-init && \
+  autossh \
+  dumb-init && \
   chmod g+w /etc/passwd
 
 ENV \
@@ -40,7 +40,7 @@ ENV \
   PACKAGE="${PACKAGE}" \
   VERSION="${VERSION}"
 
-COPY ./rootfs/entrypoint.sh /entrypoint.sh
-COPY ./rootfs/version.sh /version.sh
+ADD rootfs/entrypoint.sh /entrypoint.sh
+ADD rootfs/version.sh /version.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
