@@ -25,12 +25,12 @@ services:
     hostname: target
     command: /bin/sh -c "(
               rm /root/.ssh/target.txt;
-              sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config;
+              sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/'' /etc/ssh/sshd_config;
               echo root:root | chpasswd;
               ssh-keygen -A;
               touch /root/.ssh/target.txt;
               /usr/sbin/sshd -D -e
-              )"
+            )"
     networks:
       testnet:
         ipv4_address: 203.0.113.100
@@ -46,14 +46,14 @@ services:
       - bootloader
     command: /bin/sh -c "(
               rm /root/.ssh/remote.txt;
-              sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config;
-              sed -i s/GatewayPorts\ no/GatewayPorts\ clientspecified/ /etc/ssh/sshd_config;
-              sed -i s/AllowTcpForwarding\ no/AllowTcpForwarding\ yes/ /etc/ssh/sshd_config;
+              sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config;
+              sed -i 's/GatewayPorts no/GatewayPorts clientspecified/' /etc/ssh/sshd_config;
+              sed -i 's/AllowTcpForwarding no/AllowTcpForwarding yes/' /etc/ssh/sshd_config;
               echo root:root | chpasswd;
               ssh-keygen -A;
               touch /root/.ssh/remote.txt;
               /usr/sbin/sshd -D -e
-             )"
+            )"
     networks:
       testnet:
         ipv4_address: 203.0.113.10
@@ -83,6 +83,11 @@ services:
       - SSH_KEY_FILE=/opt/id_rsa
       - SSH_KNOWN_HOSTS_FILE=/dev/null
       - SSH_STRICT_HOST_IP_CHECK=false
+    entrypoint: /bin/sh -c "(
+              while [ ! -f /opt/remote.txt ]; do echo 'waiting for remote...'; sleep 2; done;
+              while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
+              /entrypoint.sh
+            )"
     networks:
       testnet:
         ipv4_address: 203.0.113.111
@@ -104,7 +109,7 @@ services:
               while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
               echo 'testing...'
               ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'; exit 1; fi';
-             )"
+            )"
     networks:
       testnet:
         ipv4_address: 203.0.113.200
