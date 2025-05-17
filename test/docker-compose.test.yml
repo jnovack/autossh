@@ -24,8 +24,8 @@ services:
       - bootloader
     hostname: target
     command: /bin/sh -c "(
-              rm /root/.ssh/target.txt;
-              sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/'' /etc/ssh/sshd_config;
+              if test -f "/root/.ssh/target.txt"; then rm /root/.ssh/target.txt; fi;
+              sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config;
               echo root:root | chpasswd;
               ssh-keygen -A;
               touch /root/.ssh/target.txt;
@@ -45,7 +45,7 @@ services:
     depends_on:
       - bootloader
     command: /bin/sh -c "(
-              rm /root/.ssh/remote.txt;
+              if test -f "/root/.ssh/remote.txt"; then rm /root/.ssh/remote.txt; fi;
               sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config;
               sed -i 's/GatewayPorts no/GatewayPorts clientspecified/' /etc/ssh/sshd_config;
               sed -i 's/AllowTcpForwarding no/AllowTcpForwarding yes/' /etc/ssh/sshd_config;
