@@ -102,13 +102,14 @@ services:
     hostname: source
     depends_on:
       - local
-    command: /bin/sh -c "(
+    command: /usr/bin/dumb-init /bin/sh -c "(
               while [ ! -f /opt/id_rsa ]; do echo 'waiting for ssh-keygen...'; sleep 2; done;
               while [ ! -f /opt/authorized_keys ]; do echo 'waiting for authorized_keys...'; sleep 2; done;
               while [ ! -f /opt/remote.txt ]; do echo 'waiting for remote...'; sleep 2; done;
               while [ ! -f /opt/target.txt ]; do echo 'waiting for target...'; sleep 2; done;
-              echo 'testing...'
-              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'; exit 1; fi';
+              while ! nc -z 203.0.113.10 11111 ; do echo 'waiting for port to be opened...'; sleep 2; done;
+              ssh -o StrictHostKeyChecking=no -i /opt/id_rsa root@203.0.113.10 -p 11111 -C 'if [ `hostname` == "target" ]; then echo '[INFO ] success'; exit 0; else echo '[PANIC] hostname is not target'; exit 69; fi';
+              exit $?
             )"
     networks:
       testnet:
