@@ -209,16 +209,17 @@ Defines how the tunnel will be set up:
 
 #### SSH_BIND_IP
 
-You can define which IP address the tunnel will use to bind on *remote* 
+You can define which IP address the tunnel will use to bind on *remote*
 (SSH_MODE of `-R`) or *local* (SSH_MODE of `-L`). The default
 is `127.0.0.1` only.
 
 ##### SSH_MODE of `-R` (default)
 
-**WARNING**: _This process involves changing the security on the server
+> [!WARNING]
+> This process involves changing the security on the server
 and will expose your *target* to additional networks and potentially the
 Internet.  It is not recommended to do this procedure without taking
-additional precautions._
+additional precautions.
 
 Use of this option will NOT have an effect unless you properly configure the
 `GatewayPorts` variable in your *remote* server's configuration file.  Please
@@ -226,7 +227,7 @@ see your SSH server documentation for proper set up.
 
 ##### SSH_MODE of `-L`
 
-You may want to set this to `0.0.0.0` in order to bind your `SSH_TUNNEL_PORT` 
+You may want to set this to `0.0.0.0` in order to bind your `SSH_TUNNEL_PORT`
 to all interfaces on *local* side.
 
 #### SSH_SERVER_ALIVE_INTERVAL
@@ -249,13 +250,14 @@ Sets the threshold of alive messages after which the connection is terminated an
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
-#### SSH_OPTIONS 
+#### SSH_OPTIONS
 
-Sets additional parameters to `ssh` connection. Supports more than one parameter. 
+Sets additional parameters to `ssh` connection. Supports more than one parameter.
 
 Examples:
- - SSH_OPTIONS="-o StreamLocalBindUnlink=yes" for recreate socket if it exists
- - SSH_OPTIONS="-o StreamLocalBindUnlink=yes -o UseRoaming=no" for multiple parameters
+
+- SSH_OPTIONS="-o StreamLocalBindUnlink=yes" for recreate socket if it exists
+- SSH_OPTIONS="-o StreamLocalBindUnlink=yes -o UseRoaming=no" for multiple parameters
 
 Additional details are available from [`ssh_config(5)`](https://linux.die.net/man/5/ssh_config)
 
@@ -344,7 +346,7 @@ services:
     dns:
       - 8.8.8.8
       - 4.2.2.4
-  
+
   ssh-local-forward-on-1234:
     image: jnovack/autossh
     container_name: autossh-ssh-local-forward
@@ -363,7 +365,7 @@ services:
     dns:
       - 8.8.8.8
       - 4.2.2.4
-    
+
 ```
 
 ## Multi-Arch Images
