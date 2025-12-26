@@ -35,6 +35,12 @@ if [ -n "${SSH_BIND_IP}" ] && [ "${SSH_MODE}" = "-R" ]; then
     echo "[WARN ] SSH_BIND_IP requires GatewayPorts configured on the server to work properly"
 fi
 
+if [ "${SSH_TTY_ENABLE:=true}" = true ]; then
+    SSH_TTY_ARGS="-t -t"
+else
+    SSH_TTY_ARGS=""
+fi
+
 # Pick a random port above 32768
 DEFAULT_PORT=$(($RANDOM % 10 + 32768))
 
@@ -53,7 +59,7 @@ COMMAND="autossh \
      -o ServerAliveInterval=${SSH_SERVER_ALIVE_INTERVAL:-10} \
      -o ServerAliveCountMax=${SSH_SERVER_ALIVE_COUNT_MAX:-3} \
      -o ExitOnForwardFailure=yes \
-     -t -t \
+     ${SSH_TTY_ARGS} \
      ${SSH_MODE:=-R} ${SSH_BIND_IP}:${SSH_TUNNEL_PORT}:${SSH_TARGET_HOST}:${SSH_TARGET_PORT} \
      -p ${SSH_REMOTE_PORT:=22} \
      ${SSH_REMOTE_USER}@${SSH_REMOTE_HOST} \
